@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
 import dotenv
 
 dotenv.load_dotenv()
@@ -47,9 +48,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
 ]
 
-MY_APPS = [
-    "users","material",
-]
+MY_APPS = ["users", "material", "company"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
@@ -93,7 +92,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "PORT":5432,
+        "PORT": 5432,
     },
     "test": {
         "ENGINE": "django.db.backends.sqlite3",
