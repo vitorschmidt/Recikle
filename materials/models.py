@@ -6,10 +6,10 @@ class Recomendation(models.TextChoices):
     NAORECICLAVEL = ("Não Reciclavel",)
     HOSPITALAR = ("Hospitalar",)
     ORGANICO = ("Orgânico",)
-    ELETRONICO =("Eletrônico")
-    AGRICOLA =("Agricola")
-    RADIOTIVO =("Radioativo")
-    INDUSTRIAL = ("Industrial")
+    ELETRONICO =("Eletrônico",)
+    AGRICOLA =("Agricola",)
+    RADIOTIVO =("Radioativo",)
+    INDUSTRIAL = ("Industrial",)
 
 class Material(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True,editable=False)
