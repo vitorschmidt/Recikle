@@ -30,3 +30,7 @@ class ListUsersView(SerializerByMethodMixin, generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
     queryset = User.objects.all()
+
+    serializer_map = {
+        "GET": UserSerializer
+    }
