@@ -1,8 +1,8 @@
-from material.serializers import CreateMaterialSerializer
+from materials.serializers import CreateMaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
-from company.models import Company
+from companies.models import Company
 
 
 class UniqueValidationError(APIException):

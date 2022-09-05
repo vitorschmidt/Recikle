@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 
 
-class ScheduleCollectConfig(AppConfig):
+class InfoCompanyConfig(AppConfig):
+
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'schedule_collects'
+    name = 'info_companies'

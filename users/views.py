@@ -25,3 +25,8 @@ class UpdateUserView(SerializerByMethodMixin, generics.RetrieveUpdateAPIView):
         "GET": UserSerializer,
         "PATCH": UpdateUserSerializer,
     }
+
+class ListUsersView(SerializerByMethodMixin, generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+
+    queryset = User.objects.all()

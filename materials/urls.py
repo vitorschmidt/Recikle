@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from material.views import ListCreateMaterialView,RetrieverUpdateProductView
+from materials.views import ListCreateMaterialView,RetrieverUpdateProductView
 
 
 urlpatterns = [

@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics
 
-from material.mixins import SerializerByMethodMixin
-from material.models import Material
-from material.serializers import ListMaterialSerializer,CreateMaterialSerializer
+from materials.mixins import SerializerByMethodMixin
+from materials.models import Material
+from materials.serializers import ListMaterialSerializer,CreateMaterialSerializer
 
 class ListCreateMaterialView(SerializerByMethodMixin,generics.ListCreateAPIView):
     queryset = Material.objects.all()

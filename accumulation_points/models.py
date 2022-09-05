@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class AccumulationPoint(models.Model):
+    address = models.CharField(max_length=256)
+    materials = models.ManyToManyField(
+        "materials.Material", related_name="accumulation_points"
+    )

@@ -1,7 +1,7 @@
 from rest_framework import generics
 
-from company.models import Company
-from company.serializers import CompanySerializer
+from companies.models import Company
+from companies.serializers import CompanySerializer
 
 
 class CompanyView(generics.ListCreateAPIView):

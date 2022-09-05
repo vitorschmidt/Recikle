@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from material.models import Material
+from materials.models import Material
 
 class ListMaterialSerializer(serializers.ModelSerializer):
     class Meta():
