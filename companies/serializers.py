@@ -1,4 +1,4 @@
-from materials.serializers import CreateMaterialSerializer, ListMaterialSerializer
+from materials.serializers import CreateMaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -10,6 +10,8 @@ class UniqueValidationError(APIException):
 
 
 class CompanySerializer(serializers.ModelSerializer):
+
+
     class Meta:
         model = Company
         fields = ["id", "name", "collect_days", "donation", "materials"]
