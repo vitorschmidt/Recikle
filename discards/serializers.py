@@ -1,5 +1,5 @@
-from company.models import Company
-from company.serializers import CompanySerializer
+from companies.models import Company
+from companies.serializers import CompanySerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
