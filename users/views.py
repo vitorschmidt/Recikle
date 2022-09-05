@@ -31,4 +31,6 @@ class ListUsersView(SerializerByMethodMixin, generics.ListAPIView):
 
     queryset = User.objects.all()
 
-    serializer_class = UserSerializer
+    serializer_map = {
+        "GET": UserSerializer
+    }
