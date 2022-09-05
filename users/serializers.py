@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value: int):
         if User.objects.filter(username=value).exists():
-            raise UniqueValidationError("usernmae already registered")
+            raise UniqueValidationError("username already registered")
 
         return value
 
@@ -33,3 +33,10 @@ class UserSerializer(serializers.ModelSerializer):
         account = User.objects.create_user(**validated_data)
 
         return account    
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["username", "city"]
+        read_only_fields = ["id", "password", "username", "first_name", "last_name", "is_company"]       

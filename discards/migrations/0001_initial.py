@@ -8,12 +8,12 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("material", "0001_initial"),
+        ("company", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Company",
+            name="Discard",
             fields=[
                 (
                     "id",
@@ -24,13 +24,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=50)),
-                ("collect_days", models.PositiveIntegerField()),
-                ("donation", models.BooleanField(default=False)),
+                ("address", models.CharField(max_length=150)),
+                ("city", models.CharField(max_length=50)),
+                ("quantity", models.PositiveIntegerField()),
                 (
-                    "materials",
+                    "companies",
                     models.ManyToManyField(
-                        related_name="companies", to="material.material"
+                        related_name="discards", to="company.company"
                     ),
                 ),
             ],
