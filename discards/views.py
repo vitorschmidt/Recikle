@@ -1,4 +1,4 @@
-from company.models import Company
+from companies.models import Company
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 
