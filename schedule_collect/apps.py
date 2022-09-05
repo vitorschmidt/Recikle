@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class InfoCollectConfig(AppConfig):
+class ScheduleCollectConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'info_collect'
+    name = 'schedule_collect'
