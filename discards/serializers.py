@@ -11,12 +11,9 @@ class UniqueValidationError(APIException):
 
 
 class DiscardSerializer(serializers.ModelSerializer):
-    # companies = CompanySerializer(read_only=True)
-
     class Meta:
         model = Discard
-        fields = ["id", "address", "city", "quantity", "companies"]
-        read_only_fields = ["id", "companies"]
+        fields = ["id", "address", "city", "quantity"]
 
     def validate_address(self, value: str):
         if Discard.objects.filter(address=value).exists():
@@ -29,12 +26,13 @@ class DiscardSerializer(serializers.ModelSerializer):
         companies_pop = validated_data.pop("companies")
 
         discard = Discard.objects.create(**validated_data)
-        company_id = companies_pop
-        # import ipdb
 
-        # ipdb.set_trace()
-        teste = Company.objects.filter(id=company_id)
-       
-        discard.companies.add(teste)
+        discard.companies.add(companies_pop)
 
         return discard
+
+
+class ListDiscardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discard
+        fields = "__all__"
