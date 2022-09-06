@@ -352,11 +352,11 @@ class UserViewTestCase(TestCase):
             msg=f"{order}.7) PATCH /api/user/<company>/ (company credentials) error {patch_company_content}")
 
     def test_C(self):
-        """C) Check user login and response tokens"""
+        """C) Check POST /api/login/ (user login and response tokens)"""
         self.user_login("C")
 
     def test_D(self):
-        """D) Check /api/register/ (random users)"""
+        """D) Check POST /api/register/ (random users)"""
         self.user_register("D")
         
     def test_E(self):
