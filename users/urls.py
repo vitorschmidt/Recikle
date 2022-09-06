@@ -1,5 +1,8 @@
 from django.urls import path
+
 from info_collects.views import UserInfoCollectionDetailsView, UserInfoCollectionView
+
+
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import views

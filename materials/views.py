@@ -12,7 +12,7 @@ def get_object_by_id(model, **kwargs):
     return object
 
 
-class ListCreateMaterialView(SerializerByMethodMixin, generics.ListCreateAPIView):
+class ListCreateMaterialView(generics.ListCreateAPIView):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
 
