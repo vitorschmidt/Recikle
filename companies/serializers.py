@@ -1,4 +1,3 @@
-from materials.serializers import CreateMaterialSerializer, ListMaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -25,3 +24,9 @@ class CompanySerializer(serializers.ModelSerializer):
         company = Company.objects.create(**validated_data)
 
         return company
+
+
+# class ListCompanyDiscardsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Company
+#         fields = "__all__"

@@ -9,7 +9,6 @@ class UniqueValidationError(APIException):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     password = serializers.CharField(write_only=True)
     
     class Meta:

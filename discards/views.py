@@ -1,9 +1,11 @@
 from companies.models import Company
+from companies.serializers import CompanySerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 
+from discards.mixins import SerializerByMethodMixin
 from discards.models import Discard
-from discards.serializers import DiscardSerializer
+from discards.serializers import DiscardSerializer, ListDiscardSerializer
 
 
 def get_object_by_id(model, **kwargs):
@@ -11,29 +13,24 @@ def get_object_by_id(model, **kwargs):
     return object
 
 
-class DiscardCompanyView(generics.ListCreateAPIView):
+class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
     queryset = Discard.objects.all()
-    serializer_class = DiscardSerializer
+    serializer_map = {"GET": ListDiscardSerializer, "POST": DiscardSerializer}
 
     lookup_url_kwarg = "id"
 
-    # def get_queryset(self):
-    #     company_id = self.kwargs["id"]
-    #     company = get_object_by_id(Company, id=company_id)
-    #     discards = Discard.objects.filter(companies=company)
+    def get_queryset(self):
+        company_id = self.kwargs["id"]
+        company = get_object_by_id(Company, id=company_id)
+        discards = Discard.objects.filter(companies=company)
 
-    #     return discards
+        return discards
 
     def perform_create(self, serializer):
         company_id = self.kwargs["id"]
         company = get_object_or_404(Company, id=company_id)
 
-        # teste = self.request.data
-        # # import ipdb
-
-        # # ipdb.set_trace()
-        teste = company.id
-        serializer.save(companies=teste)
+        serializer.save(companies=company)
 
 
 class DiscardDetailsView(generics.RetrieveUpdateDestroyAPIView):
