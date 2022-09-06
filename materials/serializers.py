@@ -5,7 +5,7 @@ from materials.models import Material
 class ListMaterialSerializer(serializers.ModelSerializer):
     class Meta():
         model = Material
-        fields = ["name","dangerousness","category","infos","decomposition"]
+        fields = ["id","name","dangerousness","category","infos","decomposition"]
 
 class CreateMaterialSerializer(serializers.ModelSerializer):
     class Meta():

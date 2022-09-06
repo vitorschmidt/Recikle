@@ -1,3 +1,5 @@
+from dataclasses import field
+from pyexpat import model
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -8,7 +10,7 @@ class UniqueValidationError(APIException):
     status_code = 422
 
 
-class AccumulationPointSerializer(serializers.ModelField):
+class AccumulationPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccumulationPoint
         fields = ["id", "address", "materials"]
@@ -19,7 +21,14 @@ class AccumulationPointSerializer(serializers.ModelField):
 
         return value
 
-    def create(self, validated_data):
+    def get(self, validated_data):
+        material_pop = validated_data.pop("materials")
         accumulation_point = AccumulationPoint.objects.create(**validated_data)
+        accumulation_point.materials.add(material_pop)
 
         return accumulation_point
+
+class ListAccumulationPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccumulationPoint
+        fields = "__all__"
