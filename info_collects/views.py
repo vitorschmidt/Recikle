@@ -1,10 +1,15 @@
 from django.shortcuts import get_object_or_404
 from materials.mixins import SerializerByMethodMixin
+from materials.models import Material
 from rest_framework import generics
 from users.models import User
 
 from info_collects.models import InfoCollect
-from info_collects.serializers import InfoCollectSerializer, ListInfoCollectSerializer
+from info_collects.serializers import (
+    InfoCollectMaterialSerializer,
+    InfoCollectSerializer,
+    ListInfoCollectSerializer,
+)
 
 
 def get_object_by_id(model, **kwargs):
@@ -49,5 +54,48 @@ class UserInfoCollectionDetailsView(
         user = get_object_by_id(User, id=user_id)
 
         infos = InfoCollect.objects.filter(user_id=user, id=info_id)
+
+        return infos
+
+
+class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    queryset = InfoCollect.objects.all()
+    serializer_map = {
+        "GET": ListInfoCollectSerializer,
+        "POST": InfoCollectMaterialSerializer,
+    }
+
+    def get_queryset(self):
+        material_id = self.kwargs["id"]
+        material = get_object_by_id(Material, id=material_id)
+
+        info_collect = InfoCollect.objects.filter(materials=material)
+
+        return info_collect
+
+    def perform_create(self, serializer):
+        material_id = self.kwargs["id"]
+        material = get_object_by_id(Material, id=material_id)
+
+        serializer.save(materials=material)
+
+
+class MaterialInfoCollectionDetailsView(
+    SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
+):
+    queryset = InfoCollect.objects.all()
+    serializer_map = {
+        "GET": ListInfoCollectSerializer,
+        "PATCH": InfoCollectMaterialSerializer,
+    }
+
+    lookup_url_kwarg = "info_id"
+
+    def get_queryset(self):
+        material_id = self.kwargs["id"]
+        info_id = self.kwargs["info_id"]
+        material = get_object_by_id(Material, id=material_id)
+
+        infos = InfoCollect.objects.filter(materials=material, id=info_id)
 
         return infos
