@@ -25,7 +25,7 @@ class RetrieverUpdateProductView(
     serializer_class = MaterialSerializer
 
 
-class CompanyMaterialsView(SerializerByMethodMixin, generics.ListCreateAPIView):
+class CompanyMaterialsView(generics.ListCreateAPIView):
     queryset = Material.objects.all()
     lookup_url_kwarg = "id"
     serializer_class = MaterialCompanySerializer
