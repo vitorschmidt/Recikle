@@ -16,7 +16,7 @@ class InfoCollectSerializer(serializers.ModelSerializer):
     company_id = CompanySerializer(read_only=True)
     class Meta:
         model = InfoCollect
-        fields = ["id", "user_id", "localization", "material", "company_id"]
+        fields = "__all__"
         read_only_fields = ["id","user_id","material","company_id"]
 
 
