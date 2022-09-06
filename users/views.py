@@ -1,7 +1,7 @@
 from rest_framework import generics
 from users.mixins import SerializerByMethodMixin
 from users.models import User
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from users.permissions import IsOwnerOrAdmin
 
@@ -27,7 +27,7 @@ class UpdateUserView(SerializerByMethodMixin, generics.RetrieveUpdateAPIView):
     }
 
 class ListUsersView(SerializerByMethodMixin, generics.ListAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     queryset = User.objects.all()
 
