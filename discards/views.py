@@ -15,7 +15,10 @@ def get_object_by_id(model, **kwargs):
 
 class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
     queryset = Discard.objects.all()
-    serializer_map = {"GET": ListDiscardSerializer, "POST": DiscardSerializer}
+    serializer_map = {
+        "GET": ListDiscardSerializer,
+        "POST": DiscardSerializer,
+    }
 
     lookup_url_kwarg = "id"
 
@@ -34,7 +37,14 @@ class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
 
 
 class DiscardDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DiscardSerializer
+    serializer_class = ListDiscardSerializer
     queryset = Discard.objects.all()
 
     lookup_url_kwarg = "discard_id"
+
+    def get_queryset(self):
+        company_id = self.kwargs["id"]
+        company = get_object_by_id(Company, id=company_id)
+        discards = Discard.objects.filter(companies=company)
+
+        return discards

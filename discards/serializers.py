@@ -1,3 +1,4 @@
+import companies
 from companies.models import Company
 from companies.serializers import CompanySerializer
 from rest_framework import serializers
@@ -15,17 +16,11 @@ class DiscardSerializer(serializers.ModelSerializer):
         model = Discard
         fields = ["id", "address", "city", "quantity"]
 
-    def validate_address(self, value: str):
-        if Discard.objects.filter(address=value).exists():
-            raise UniqueValidationError("address already registered")
-
-        return value
-
     def create(self, validated_data):
 
         companies_pop = validated_data.pop("companies")
 
-        discard = Discard.objects.create(**validated_data)
+        discard = Discard.objects.get_or_create(**validated_data)[0]
 
         discard.companies.add(companies_pop)
 
