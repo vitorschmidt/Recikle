@@ -13,17 +13,11 @@ class UniqueValidationError(APIException):
 class AccumulationPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccumulationPoint
-        fields = ["id", "address", "materials"]
+        fields = ["id", "address"]
 
-    def validate_address(self, value: str):
-        if AccumulationPoint.objects.filter(address=value).exists():
-            raise UniqueValidationError("address already registered")
-
-        return value
-
-    def get(self, validated_data):
+    def create(self, validated_data):
         material_pop = validated_data.pop("materials")
-        accumulation_point = AccumulationPoint.objects.create(**validated_data)
+        accumulation_point= AccumulationPoint.objects.get_or_create(**validated_data)[0]
         accumulation_point.materials.add(material_pop)
 
         return accumulation_point
