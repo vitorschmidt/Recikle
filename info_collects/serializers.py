@@ -1,9 +1,6 @@
 from companies.models import Company
-from companies.serializers import CompanySerializer
-from materials.serializers import MaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
-from users.serializers import UserSerializer
 
 from info_collects.models import InfoCollect
 
@@ -13,10 +10,6 @@ class UniqueValidationError(APIException):
 
 
 class InfoCollectSerializer(serializers.ModelSerializer):
-    # materials = MaterialSerializer(read_only=True)
-    # user_id = UserSerializer(read_only=True)
-    # company_id = CompanySerializer(read_only=True)
-
     class Meta:
         model = InfoCollect
         fields = ["id", "cep", "address", "reference_point", "company"]
@@ -40,3 +33,9 @@ class ListInfoCollectSerializer(serializers.ModelSerializer):
     class Meta:
         model = InfoCollect
         fields = "__all__"
+
+
+class ListInfosCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfoCollect
+        fields = ["id", "cep", "address", "reference_point"]

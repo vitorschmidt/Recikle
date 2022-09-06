@@ -12,12 +12,6 @@ def get_object_by_id(model, **kwargs):
     return object
 
 
-# class InfoCollectView(generics.ListCreateAPIView):
-
-#     queryset = InfoCollect.objects.all()
-#     serializer_class = InfoCollectSerializer
-
-
 class UserInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView):
     queryset = InfoCollect.objects.all()
     serializer_map = {"GET": ListInfoCollectSerializer, "POST": InfoCollectSerializer}
@@ -38,5 +32,22 @@ class UserInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView
         serializer.save(user_id=user)
 
 
-class UserInfoCollectionDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    ...
+class UserInfoCollectionDetailsView(
+    SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
+):
+    queryset = InfoCollect.objects.all()
+    serializer_map = {
+        "GET": ListInfoCollectSerializer,
+        "PATCH": InfoCollectSerializer,
+    }
+
+    lookup_url_kwarg = "info_id"
+
+    def get_queryset(self):
+        user_id = self.kwargs["id"]
+        info_id = self.kwargs["info_id"]
+        user = get_object_by_id(User, id=user_id)
+
+        infos = InfoCollect.objects.filter(user_id=user, id=info_id)
+
+        return infos
