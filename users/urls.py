@@ -1,8 +1,5 @@
 from django.urls import path
-
 from info_collects.views import UserInfoCollectionDetailsView, UserInfoCollectionView
-
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import views
@@ -14,7 +11,7 @@ urlpatterns = [
     path("users/", views.ListUsersView.as_view()),
     path("users/<id>/info_collection/", UserInfoCollectionView.as_view()),
     path(
-        "users/<int:id>/info_collection/<int:info_id>/",
+        "users/<id>/info_collection/<info_id>/",
         UserInfoCollectionDetailsView.as_view(),
     ),
 ]
