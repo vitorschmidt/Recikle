@@ -54,8 +54,7 @@ class UserModelTestCase(TestCase):
 
     # User Model Attributes
 
-    def test_user_model_attributes(self):
-        """Check user model attributes"""
+    def user_model_attributes(self, order):
         
         user_model = {
             "id": {
@@ -110,15 +109,14 @@ class UserModelTestCase(TestCase):
         user = User.objects.get(username="superuser")
         for field in user_model:
             self.assertIsInstance(user._meta.get_field(field), user_model[field]["instance"],
-                msg=f"User's {field} field type error")
+                msg=f"{order}.1) User's {field} field type error")
             for parameter in user_model[field]["parameters"]:
                 self.assertEquals(getattr(user._meta.get_field(field), parameter), user_model[field]["parameters"][parameter],
-                    msg=f"User's {field} field {parameter} error")
+                    msg=f"{order}.2) User's {field} field {parameter} error")
                 
     # User Levels and UUID
     
-    def test_user_type(self):
-        """Check user type"""
+    def user_type(self, order):
         
         user_levels = {
             "superuser": {
@@ -138,7 +136,15 @@ class UserModelTestCase(TestCase):
         for level in user_levels:
             user = User.objects.get(username=level)
             self.assertTrue(getattr(user, "id"),
-                msg=f"Invalid {level}.id (UUID)")
+                msg=f"{order}.1) Invalid {level}.id (UUID)")
             for attribute in user_levels[level]:
                 self.assertEqual(getattr(user, attribute), user_levels[level][attribute],
-                    msg=f"'{level}.{attribute}' must be {user_levels[level][attribute]}")
+                    msg=f"{order}.2) '{level}.{attribute}' must be {user_levels[level][attribute]}")
+
+    def test_A(self):
+        """A) Check user model attributes"""
+        self.user_model_attributes("A")
+
+    def test_B(self):
+        """B) Check user type"""
+        self.user_type("B")
