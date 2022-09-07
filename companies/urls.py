@@ -14,4 +14,8 @@ urlpatterns = [
         "companies/<int:id>/materials/<int:material_id>/",
         CompanyMaterialsDetailsView.as_view(),
     ),
+    path(
+        "companies/<int:id>/info_collection/",
+        views.ListInfoCollectionCompany.as_view(),
+    ),
 ]
