@@ -1,6 +1,3 @@
-import companies
-from companies.models import Company
-from companies.serializers import CompanySerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 

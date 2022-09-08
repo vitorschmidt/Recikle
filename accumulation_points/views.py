@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from accumulation_points.mixins import SerializerByMethodMixin

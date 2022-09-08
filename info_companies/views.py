@@ -1,5 +1,6 @@
 from companies.models import Company
 from companies.serializers import InfoCompanyListSerializer
+
 from rest_framework import generics
 
 from info_companies.models import InfoCompany
