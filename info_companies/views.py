@@ -1,15 +1,32 @@
-
+from companies.models import Company
+from companies.serializers import InfoCompanyListSerializer
 from rest_framework import generics
-from info_companies.serializers import InfoCompanySerializer
+
 from info_companies.models import InfoCompany
+from info_companies.serializers import InfoCompanySerializer
+
 
 class InfoCompanyView(generics.ListCreateAPIView):
-
     queryset = InfoCompany.objects.all()
     serializer_class = InfoCompanySerializer
 
-class InfoCompanyDetailView(generics.RetrieveUpdateDestroyAPIView):
-    
+
+class InfoCompanyDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = InfoCompany.objects.all()
     serializer_class = InfoCompanySerializer
 
+    lookup_url_kwarg = "id"
+
+
+class CompanyInfosView(generics.ListAPIView):
+    serializer_class = InfoCompanyListSerializer
+    queryset = Company.objects.all()
+
+    lookup_url_kwarg = "id"
+
+    def get_queryset(self):
+        company_id = self.kwargs["id"]
+
+        company = Company.objects.filter(id=company_id)
+
+        return company
