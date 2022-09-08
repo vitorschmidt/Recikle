@@ -1,5 +1,6 @@
 from discards.views import DiscardCompanyView, DiscardDetailsView
 from django.urls import path
+from info_companies.views import CompanyInfosView
 from materials.views import CompanyMaterialsDetailsView, CompanyMaterialsView
 
 from . import views
@@ -18,4 +19,5 @@ urlpatterns = [
         "companies/<int:id>/info_collection/",
         views.ListInfoCollectionCompany.as_view(),
     ),
+    path("companies/<int:id>/info_company/", CompanyInfosView.as_view()),
 ]
