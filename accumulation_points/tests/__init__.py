@@ -1,5 +1,5 @@
 """
-This package handles the user module tests.
+This package handles the accumulation_points module tests.
 
 PACKAGE CONTENTS
     test_models

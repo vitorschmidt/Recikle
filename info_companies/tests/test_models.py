@@ -1,0 +1,88 @@
+from uuid import UUID
+
+from companies.models import Company
+from django.db import models
+from django.test import Client, TestCase
+from info_companies.models import InfoCompany
+from rest_framework import status
+
+
+def is_valid_uuid(uuid_to_test, version=4):
+    try:
+        uuid_obj = UUID(uuid_to_test, version=version)
+    except ValueError:
+        return False
+    return str(uuid_obj) == uuid_to_test
+        
+        
+class InfoCompanyModelTestCase(TestCase):
+    
+    def setUp(self):
+        
+        self.company_data = {
+            "name": "Company",
+            "collect_days": 5,
+            "donation": True,
+        }
+        
+        self.company = Company.objects.create(**self.company_data)
+
+        self.info_company_data = {
+            "telephone": 12345678,
+            "email": "company@email.com",
+            "address": "Company's Address",
+            "company": self.company
+        }
+        
+        self.info_company = InfoCompany.objects.create(**self.info_company_data)
+
+    # InfoCompany Model Attributes
+
+    def info_company_model_attributes(self, order):
+        
+        info_company_model = {
+            "id": {
+                "instance": models.IntegerField,
+                "parameters": {
+                    "primary_key": True
+                }
+            },
+            "telephone": {
+                "instance": models.IntegerField,
+                "parameters": {
+                }
+            },
+            "email": {
+                "instance": models.EmailField,
+                "parameters": {
+                }
+            },
+            "address": {
+                "instance": models.CharField,
+                "parameters": {
+                    "max_length": 100
+                }
+            },
+            "company": {
+                "instance": models.ForeignKey,
+                "parameters": {
+                }
+            },
+        }
+        
+        info_company = InfoCompany.objects.get(id=self.info_company.id)
+        for field in info_company_model:
+            self.assertIsInstance(info_company._meta.get_field(field), info_company_model[field]["instance"],
+                msg=f"{order}.1) InfoCompany's {field} field type error")
+            for parameter in info_company_model[field]["parameters"]:
+                self.assertEquals(getattr(info_company._meta.get_field(field), parameter), info_company_model[field]["parameters"][parameter],
+                    msg=f"{order}.2) InfoCompany's {field} field {parameter} error")
+
+
+    def info_company_field_contents(self, order):
+        info_company = InfoCompany.objects.get(id=self.info_company.id)
+        for field in self.info_company_data:
+            self.assertEquals(getattr(info_company, field), self.info_company_data[field],
+                msg=f"{order}.1) InfoCompany's {field} content error")
+           
+

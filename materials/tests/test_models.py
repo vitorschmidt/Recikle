@@ -80,7 +80,43 @@ class MaterialModelTestCase(TestCase):
                 self.assertEquals(getattr(material._meta.get_field(field), parameter), material_model[field]["parameters"][parameter],
                     msg=f"{order}.2) User's {field} field {parameter} error")
 
+
+    def material_field_contents(self, order):
+        
+        material_1 = {
+            "name": "Material 1",
+            "dangerousness": False,
+            "category": "Category 1",
+            "infos": "Material 1 info",
+            "decomposition": 1
+        }
+        
+        Material.objects.create(**material_1)
+        
+        material_2 = {
+            "name": "Material 2",
+            "dangerousness": False,
+            "category": "Category 2",
+            "infos": "Material 2 info",
+            "decomposition": 2
+        }
+
+        Material.objects.create(**material_2)
+
+        instance_1 = Material.objects.get(name=material_1["name"])
+
+        for field in material_1:
+            self.assertEquals(getattr(instance_1, field), material_1[field],
+                msg=f"{order}.1) Material 1's {field} content error")
+
+        instance_2 = Material.objects.get(name=material_2["name"])
+
+        for field in material_2:
+            self.assertEquals(getattr(instance_2, field), material_2[field],
+                msg=f"{order}.2) Material 2's {field} content error")
+
+''' 
     def test_A(self):
         """A) Check material model attributes"""
-        self.material_model_attributes("A")
+        self.material_model_attributes("A") '''
 

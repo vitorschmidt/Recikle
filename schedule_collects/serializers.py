@@ -10,7 +10,6 @@ class UniqueValidationError(APIException):
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
-    # materials = ListMaterialSerializer(read_only=True)
     user_id = UserSerializer(read_only=True)
 
     class Meta:
@@ -21,7 +20,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         material_pop = validated_data.pop("materials")
-        # ipdb.set_trace()
         schedule = ScheduleCollect.objects.get_or_create(**validated_data)[0]
         schedule.materials.add(material_pop)
         return schedule

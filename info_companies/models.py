@@ -1,8 +1,4 @@
-
-import uuid
-
 from django.db import models
-
 
 class InfoCompany(models.Model):
     telephone = models.IntegerField()
