@@ -1,4 +1,3 @@
-import info_collects
 from info_collects.serializers import ListInfosCompanySerializer
 from info_companies.serializers import InfoCompanyDetailsSerializer
 from rest_framework import serializers
