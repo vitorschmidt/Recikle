@@ -1,11 +1,9 @@
-from dataclasses import field
-from materials.serializers import ListMaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 from users.serializers import UserSerializer
 from schedule_collects.models import ScheduleCollect
 from users.serializers import UserSerializer
-import ipdb
+
 
 class UniqueValidationError(APIException):
     status_code = 422
