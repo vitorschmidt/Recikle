@@ -1,5 +1,4 @@
 from companies.models import Company
-from companies.serializers import CompanySerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 

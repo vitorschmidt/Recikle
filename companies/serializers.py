@@ -1,4 +1,3 @@
-import info_collects
 from info_collects.serializers import ListInfosCompanySerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException

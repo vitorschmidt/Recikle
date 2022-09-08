@@ -1,4 +1,3 @@
-
 from rest_framework import generics
 from info_companies.serializers import InfoCompanySerializer
 from info_companies.models import InfoCompany
