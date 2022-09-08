@@ -1,5 +1,6 @@
 from info_collects.serializers import ListInfosCompanySerializer
 from info_companies.serializers import InfoCompanyDetailsSerializer
+from materials.serializers import MaterialSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
