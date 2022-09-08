@@ -4,7 +4,11 @@ from rest_framework import generics
 
 from materials.mixins import SerializerByMethodMixin
 from materials.models import Material
-from materials.serializers import MaterialCompanySerializer, MaterialSerializer
+from materials.serializers import (
+    MaterialCompanySerializer,
+    MaterialSerializer,
+    RelationMaterialCompany,
+)
 
 
 def get_object_by_id(model, **kwargs):
@@ -25,10 +29,13 @@ class RetrieverUpdateProductView(
     serializer_class = MaterialSerializer
 
 
-class CompanyMaterialsView(generics.ListCreateAPIView):
+class CompanyMaterialsView(SerializerByMethodMixin, generics.ListCreateAPIView):
     queryset = Material.objects.all()
     lookup_url_kwarg = "id"
-    serializer_class = MaterialCompanySerializer
+    serializer_map = {
+        "GET": MaterialCompanySerializer,
+        "POST": RelationMaterialCompany,
+    }
 
     def get_queryset(self):
         company_id = self.kwargs["id"]
@@ -38,7 +45,9 @@ class CompanyMaterialsView(generics.ListCreateAPIView):
         return materials
 
     def perform_create(self, serializer):
+
         company_id = self.kwargs["id"]
+
         company = get_object_or_404(Company, id=company_id)
 
         serializer.save(companies=company)
