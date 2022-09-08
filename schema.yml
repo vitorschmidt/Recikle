@@ -1,0 +1,2714 @@
+openapi: 3.0.3
+info:
+  title: Recikle
+  version: 1.0.0
+  description: Projeto destinado a ajudar na reciclagem e coleta de lixo.
+paths:
+  /api/companies/:
+    get:
+      operationId: api_companies_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCompanyList'
+          description: ''
+    post:
+      operationId: api_companies_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Company'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+  /api/companies/{id}/:
+    get:
+      operationId: api_companies_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    put:
+      operationId: api_companies_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Company'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    patch:
+      operationId: api_companies_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCompany'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+          description: ''
+    delete:
+      operationId: api_companies_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/companies/{id}/discards/:
+    get:
+      operationId: api_companies_discards_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListDiscardList'
+          description: ''
+    post:
+      operationId: api_companies_discards_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Discard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Discard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Discard'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discard'
+          description: ''
+  /api/companies/{id}/discards/{discard_id}/:
+    get:
+      operationId: api_companies_discards_retrieve
+      parameters:
+      - in: path
+        name: discard_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDiscard'
+          description: ''
+    put:
+      operationId: api_companies_discards_update
+      parameters:
+      - in: path
+        name: discard_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListDiscard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListDiscard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListDiscard'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDiscard'
+          description: ''
+    patch:
+      operationId: api_companies_discards_partial_update
+      parameters:
+      - in: path
+        name: discard_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedListDiscard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedListDiscard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedListDiscard'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDiscard'
+          description: ''
+    delete:
+      operationId: api_companies_discards_destroy
+      parameters:
+      - in: path
+        name: discard_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/companies/{id}/info_collection/:
+    get:
+      operationId: api_companies_info_collection_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListInfoCollectionCompanyList'
+          description: ''
+  /api/companies/{id}/info_company/:
+    get:
+      operationId: api_companies_info_company_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInfoCompanyListList'
+          description: ''
+  /api/companies/{id}/materials/:
+    get:
+      operationId: api_companies_materials_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaterialCompanyList'
+          description: ''
+    post:
+      operationId: api_companies_materials_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialCompany'
+          description: ''
+  /api/companies/{id}/materials/{material_id}/:
+    get:
+      operationId: api_companies_materials_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: material_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialCompany'
+          description: ''
+    put:
+      operationId: api_companies_materials_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: material_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MaterialCompany'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialCompany'
+          description: ''
+    patch:
+      operationId: api_companies_materials_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: material_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterialCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterialCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMaterialCompany'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialCompany'
+          description: ''
+    delete:
+      operationId: api_companies_materials_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: material_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/info_company/:
+    get:
+      operationId: api_info_company_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInfoCompanyList'
+          description: ''
+    post:
+      operationId: api_info_company_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCompany'
+          description: ''
+  /api/info_company/{id}/:
+    get:
+      operationId: api_info_company_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCompany'
+          description: ''
+    put:
+      operationId: api_info_company_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InfoCompany'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCompany'
+          description: ''
+    patch:
+      operationId: api_info_company_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCompany'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCompany'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCompany'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCompany'
+          description: ''
+    delete:
+      operationId: api_info_company_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/login/:
+    post:
+      operationId: api_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/materials/:
+    get:
+      operationId: api_materials_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaterialList'
+          description: ''
+    post:
+      operationId: api_materials_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Material'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Material'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Material'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+          description: ''
+  /api/materials/{id}/:
+    get:
+      operationId: api_materials_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: api_materials_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: api_materials_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/materials/{id}/accumulation_point/:
+    get:
+      operationId: api_materials_accumulation_point_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListAccumulationPointList'
+          description: ''
+    post:
+      operationId: api_materials_accumulation_point_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccumulationPoint'
+          description: ''
+  /api/materials/{id}/accumulation_point/{accumulation_point_id}/:
+    get:
+      operationId: api_materials_accumulation_point_retrieve
+      parameters:
+      - in: path
+        name: accumulation_point_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccumulationPoint'
+          description: ''
+    put:
+      operationId: api_materials_accumulation_point_update
+      parameters:
+      - in: path
+        name: accumulation_point_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccumulationPoint'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccumulationPoint'
+          description: ''
+    patch:
+      operationId: api_materials_accumulation_point_partial_update
+      parameters:
+      - in: path
+        name: accumulation_point_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAccumulationPoint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAccumulationPoint'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAccumulationPoint'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccumulationPoint'
+          description: ''
+    delete:
+      operationId: api_materials_accumulation_point_destroy
+      parameters:
+      - in: path
+        name: accumulation_point_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/materials/{id}/info_collection/:
+    get:
+      operationId: api_materials_info_collection_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListInfoCollectList'
+          description: ''
+    post:
+      operationId: api_materials_info_collection_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoCollectMaterial'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InfoCollectMaterial'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InfoCollectMaterial'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCollectMaterial'
+          description: ''
+  /api/materials/{id}/info_collection/{info_id}/:
+    get:
+      operationId: api_materials_info_collection_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInfoCollect'
+          description: ''
+    put:
+      operationId: api_materials_info_collection_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: api_materials_info_collection_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollectMaterial'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollectMaterial'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollectMaterial'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCollectMaterial'
+          description: ''
+    delete:
+      operationId: api_materials_info_collection_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/register/:
+    post:
+      operationId: api_register_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/schedule/:
+    get:
+      operationId: api_schedule_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListScheduleList'
+          description: ''
+    post:
+      operationId: api_schedule_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+  /api/schedule/materials/{id}/:
+    get:
+      operationId: api_schedule_materials_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListScheduleList'
+          description: ''
+    post:
+      operationId: api_schedule_materials_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+  /api/schedule/materials/{id}/{schedule_id}/:
+    get:
+      operationId: api_schedule_materials_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: schedule_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    put:
+      operationId: api_schedule_materials_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: schedule_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    patch:
+      operationId: api_schedule_materials_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: schedule_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSchedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSchedule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSchedule'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    delete:
+      operationId: api_schedule_materials_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: schedule_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/user/{user_id}/:
+    get:
+      operationId: api_user_retrieve
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: api_user_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: api_user_partial_update
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUser'
+          description: ''
+  /api/users/:
+    get:
+      operationId: api_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+  /api/users/{id}/info_collection/:
+    get:
+      operationId: api_users_info_collection_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListInfoCollectList'
+          description: ''
+    post:
+      operationId: api_users_info_collection_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoCollect'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InfoCollect'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InfoCollect'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCollect'
+          description: ''
+  /api/users/{id}/info_collection/{info_id}/:
+    get:
+      operationId: api_users_info_collection_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInfoCollect'
+          description: ''
+    put:
+      operationId: api_users_info_collection_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: api_users_info_collection_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollect'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollect'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInfoCollect'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoCollect'
+          description: ''
+    delete:
+      operationId: api_users_info_collection_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      - in: path
+        name: info_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this info collect.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AccumulationPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 256
+      required:
+      - address
+      - id
+    CategoryEnum:
+      enum:
+      - Reciclavel
+      - Não Reciclavel
+      - Hospitalar
+      - Orgânico
+      - Eletrônico
+      - Agricola
+      - Radioativo
+      - Industrial
+      type: string
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        collect_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        donation:
+          type: boolean
+        materials:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+      - collect_days
+      - id
+      - materials
+      - name
+    Discard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 150
+        city:
+          type: string
+          maxLength: 50
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - address
+      - city
+      - id
+      - quantity
+    InfoCollect:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+        company:
+          type: integer
+      required:
+      - address
+      - cep
+      - company
+      - id
+      - reference_point
+    InfoCollectMaterial:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+        company:
+          type: integer
+      required:
+      - address
+      - cep
+      - company
+      - id
+      - reference_point
+    InfoCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        telephone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        address:
+          type: string
+          maxLength: 100
+        company:
+          type: integer
+      required:
+      - address
+      - company
+      - email
+      - id
+      - telephone
+    InfoCompanyDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        telephone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        address:
+          type: string
+          maxLength: 100
+      required:
+      - address
+      - email
+      - id
+      - telephone
+    InfoCompanyList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        collect_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        donation:
+          type: boolean
+        materials:
+          type: array
+          items:
+            type: integer
+        info_company:
+          type: array
+          items:
+            $ref: '#/components/schemas/InfoCompanyDetails'
+          readOnly: true
+      required:
+      - collect_days
+      - id
+      - info_company
+      - materials
+      - name
+    ListAccumulationPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 256
+        materials:
+          type: array
+          items:
+            type: integer
+      required:
+      - address
+      - id
+      - materials
+    ListDiscard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 150
+        city:
+          type: string
+          maxLength: 50
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        companies:
+          type: array
+          items:
+            type: integer
+      required:
+      - address
+      - city
+      - companies
+      - id
+      - quantity
+    ListInfoCollect:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+        company:
+          type: integer
+        user_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+        materials:
+          type: array
+          items:
+            type: integer
+      required:
+      - address
+      - cep
+      - company
+      - id
+      - materials
+      - reference_point
+      - user_id
+    ListInfoCollectionCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        collect_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        donation:
+          type: boolean
+        materials:
+          type: array
+          items:
+            type: integer
+        info_collect:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListInfosCompany'
+          readOnly: true
+      required:
+      - collect_days
+      - id
+      - info_collect
+      - materials
+      - name
+    ListInfosCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+      required:
+      - address
+      - cep
+      - id
+      - reference_point
+    ListSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        scheduling:
+          type: string
+          format: date-time
+        city:
+          type: string
+          maxLength: 128
+        user:
+          type: string
+          format: uuid
+        materials:
+          type: array
+          items:
+            type: integer
+      required:
+      - city
+      - days
+      - id
+      - materials
+      - scheduling
+      - user
+    Material:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        dangerousness:
+          type: boolean
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        infos:
+          type: string
+          maxLength: 500
+        decomposition:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - decomposition
+      - id
+      - infos
+      - name
+    MaterialCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        dangerousness:
+          type: boolean
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        infos:
+          type: string
+          maxLength: 500
+        decomposition:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        companies:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+      - companies
+      - decomposition
+      - id
+      - infos
+      - name
+    PaginatedCompanyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    PaginatedInfoCompanyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InfoCompany'
+    PaginatedInfoCompanyListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InfoCompanyList'
+    PaginatedListAccumulationPointList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListAccumulationPoint'
+    PaginatedListDiscardList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListDiscard'
+    PaginatedListInfoCollectList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListInfoCollect'
+    PaginatedListInfoCollectionCompanyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListInfoCollectionCompany'
+    PaginatedListScheduleList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListSchedule'
+    PaginatedMaterialCompanyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialCompany'
+    PaginatedMaterialList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Material'
+    PaginatedUserList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedAccumulationPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 256
+    PatchedCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        collect_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        donation:
+          type: boolean
+        materials:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+    PatchedInfoCollect:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+        company:
+          type: integer
+    PatchedInfoCollectMaterial:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cep:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        address:
+          type: string
+          maxLength: 120
+        reference_point:
+          type: string
+          maxLength: 120
+        company:
+          type: integer
+    PatchedInfoCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        telephone:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        address:
+          type: string
+          maxLength: 100
+        company:
+          type: integer
+    PatchedListDiscard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        address:
+          type: string
+          maxLength: 150
+        city:
+          type: string
+          maxLength: 50
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        companies:
+          type: array
+          items:
+            type: integer
+    PatchedMaterialCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        dangerousness:
+          type: boolean
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        infos:
+          type: string
+          maxLength: 500
+        decomposition:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        companies:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+    PatchedSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        city:
+          type: string
+          maxLength: 128
+        user_id:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+    PatchedUpdateUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        password:
+          type: string
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        username:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        city:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        is_company:
+          type: boolean
+          readOnly: true
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        days:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        city:
+          type: string
+          maxLength: 128
+        user_id:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - city
+      - days
+      - id
+      - user_id
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    UpdateUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        password:
+          type: string
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        username:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        city:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        is_company:
+          type: boolean
+          readOnly: true
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - city
+      - email
+      - first_name
+      - id
+      - is_company
+      - last_name
+      - password
+      - username
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 200
+        password:
+          type: string
+          writeOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 50
+        city:
+          type: string
+          maxLength: 120
+        last_name:
+          type: string
+          maxLength: 50
+        is_company:
+          type: boolean
+        date_joined:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+      required:
+      - city
+      - email
+      - first_name
+      - id
+      - last_name
+      - password
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

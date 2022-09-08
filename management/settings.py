@@ -46,7 +46,8 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    'drf_spectacular',
 ]
 
 
@@ -146,6 +147,15 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 4,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Recikle',
+    'DESCRIPTION': 'Projeto destinado a ajudar na reciclagem e coleta de lixo.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Static files (CSS, JavaScript, Images)
