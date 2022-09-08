@@ -1,4 +1,5 @@
 from info_collects.serializers import ListInfosCompanySerializer
+from info_companies.serializers import InfoCompanyDetailsSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -33,3 +34,12 @@ class ListInfoCollectionCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ["id", "name", "collect_days", "donation", "materials", "info_collect"]
+
+
+class InfoCompanyListSerializer(serializers.ModelSerializer):
+
+    info_company = InfoCompanyDetailsSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Company
+        fields = ["id", "name", "collect_days", "donation", "materials", "info_company"]
