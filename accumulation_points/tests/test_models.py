@@ -1,20 +1,8 @@
-from uuid import UUID
-
 from accumulation_points.models import AccumulationPoint
 from django.db import models
-from django.test import Client, TestCase
-from materials.models import Material
-from rest_framework import status
+from django.test import TestCase
 
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
-        
-        
 class AccumulationPointModelTestCase(TestCase):
     
     def setUp(self):

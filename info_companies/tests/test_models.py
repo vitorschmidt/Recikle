@@ -1,20 +1,9 @@
-from uuid import UUID
-
 from companies.models import Company
 from django.db import models
-from django.test import Client, TestCase
+from django.test import TestCase
 from info_companies.models import InfoCompany
-from rest_framework import status
 
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
-        
-        
 class InfoCompanyModelTestCase(TestCase):
     
     def setUp(self):

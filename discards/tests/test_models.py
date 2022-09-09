@@ -1,19 +1,8 @@
-from uuid import UUID
-
 from discards.models import Discard
 from django.db import models
-from django.test import Client, TestCase
-from rest_framework import status
+from django.test import TestCase
 
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
-        
-        
 class DiscardModelTestCase(TestCase):
     
     def setUp(self):
@@ -22,7 +11,6 @@ class DiscardModelTestCase(TestCase):
             "address": "Discard's Address",
             "city": "Discard's City",
             "quantity": 5,
-            #"materials": None,
         }
         
         self.discard = Discard.objects.create(**self.discard_data)
@@ -51,7 +39,7 @@ class DiscardModelTestCase(TestCase):
                 }
             },
             "quantity": {
-                "instance": models.PositiveBigIntegerField,
+                "instance": models.PositiveIntegerField,
                 "parameters": {
                 }
             },

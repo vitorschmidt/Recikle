@@ -1,17 +1,16 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from django.db import models
-from django.test import Client, TestCase
-from rest_framework import status
+from django.test import TestCase
 from users.models import User
 
 
 def is_valid_uuid(uuid_to_test, version=4):
     try:
-        uuid_obj = UUID(uuid_to_test, version=version)
+        uuid_obj = UUID(str(uuid_to_test), version=version)
     except ValueError:
         return False
-    return str(uuid_obj) == uuid_to_test
+    return str(uuid_obj) == str(uuid_to_test)
         
         
 class UserModelTestCase(TestCase):
@@ -133,19 +132,17 @@ class UserModelTestCase(TestCase):
             }
         }
             
+        self.assertFalse(is_valid_uuid("0"), 
+            msg=f"{order}.1) UUID test function issue (should return false)")
+        valid_uuid = uuid4()
+        self.assertTrue(is_valid_uuid(valid_uuid), 
+            msg=f"{order}.2) UUID test function issue (should return true)")
+
         for level in user_levels:
             user = User.objects.get(username=level)
-            self.assertTrue(getattr(user, "id"),
-                msg=f"{order}.1) Invalid {level}.id (UUID)")
+            self.assertTrue(is_valid_uuid(user.id), 
+                msg=f"{order}.3) Invalid {level}.id (UUID)")
             for attribute in user_levels[level]:
                 self.assertEqual(getattr(user, attribute), user_levels[level][attribute],
-                    msg=f"{order}.2) '{level}.{attribute}' must be {user_levels[level][attribute]}")
-''' 
-    def test_A(self):
-        """A) Check user model attributes"""
-        self.user_model_attributes("A")
+                    msg=f"{order}.4) '{level}.{attribute}' must be {user_levels[level][attribute]}")
 
-    def test_B(self):
-        """B) Check user type"""
-        self.user_type("B")
- '''
