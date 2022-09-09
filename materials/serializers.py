@@ -1,12 +1,23 @@
 from rest_framework import serializers
+from rest_framework.exceptions import APIException
 
 from materials.models import Material
+
+
+class UniqueValidationError(APIException):
+    status_code = 422
 
 
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
         fields = ["id", "name", "dangerousness", "category", "infos", "decomposition"]
+
+    def validate_name(self, value: str):
+        if Material.objects.filter(name=value).exists():
+            raise UniqueValidationError("material name already registered")
+
+        return value
 
 
 class MaterialCompanySerializer(serializers.ModelSerializer):

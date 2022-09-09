@@ -14,4 +14,5 @@ urlpatterns = [
         "users/<id>/info_collection/<info_id>/",
         UserInfoCollectionDetailsView.as_view(),
     ),
+    path("users/<id>/schedules/", views.UserSchedulesView.as_view()),
 ]

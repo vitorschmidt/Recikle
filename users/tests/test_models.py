@@ -1,17 +1,16 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from django.db import models
-from django.test import Client, TestCase
-from rest_framework import status
+from django.test import TestCase
 from users.models import User
 
 
 def is_valid_uuid(uuid_to_test, version=4):
     try:
-        uuid_obj = UUID(uuid_to_test, version=version)
+        uuid_obj = UUID(str(uuid_to_test), version=version)
     except ValueError:
         return False
-    return str(uuid_obj) == uuid_to_test
+    return str(uuid_obj) == str(uuid_to_test)
         
         
 class UserModelTestCase(TestCase):
@@ -54,7 +53,7 @@ class UserModelTestCase(TestCase):
 
     # User Model Attributes
 
-    def user_model_attributes(self, order):
+    def user_model_attributes(self):
         
         user_model = {
             "id": {
@@ -109,14 +108,14 @@ class UserModelTestCase(TestCase):
         user = User.objects.get(username="superuser")
         for field in user_model:
             self.assertIsInstance(user._meta.get_field(field), user_model[field]["instance"],
-                msg=f"{order}.1) User's {field} field type error")
+                msg=f"1) User's {field} field type error")
             for parameter in user_model[field]["parameters"]:
                 self.assertEquals(getattr(user._meta.get_field(field), parameter), user_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) User's {field} field {parameter} error")
+                    msg=f"2) User's {field} field {parameter} error")
                 
     # User Levels and UUID
     
-    def user_type(self, order):
+    def user_type(self):
         
         user_levels = {
             "superuser": {
@@ -133,19 +132,17 @@ class UserModelTestCase(TestCase):
             }
         }
             
+        self.assertFalse(is_valid_uuid("0"), 
+            msg=f"1) UUID test function issue (should return false)")
+        valid_uuid = uuid4()
+        self.assertTrue(is_valid_uuid(valid_uuid), 
+            msg=f"2) UUID test function issue (should return true)")
+
         for level in user_levels:
             user = User.objects.get(username=level)
-            self.assertTrue(getattr(user, "id"),
-                msg=f"{order}.1) Invalid {level}.id (UUID)")
+            self.assertTrue(is_valid_uuid(user.id), 
+                msg=f"3) Invalid {level}.id (UUID)")
             for attribute in user_levels[level]:
                 self.assertEqual(getattr(user, attribute), user_levels[level][attribute],
-                    msg=f"{order}.2) '{level}.{attribute}' must be {user_levels[level][attribute]}")
-''' 
-    def test_A(self):
-        """A) Check user model attributes"""
-        self.user_model_attributes("A")
+                    msg=f"4) '{level}.{attribute}' must be {user_levels[level][attribute]}")
 
-    def test_B(self):
-        """B) Check user type"""
-        self.user_type("B")
- '''
