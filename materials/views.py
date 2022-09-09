@@ -1,6 +1,8 @@
 from companies.models import Company
+from companies.permissions import IsCompanyOwnerOrAdmin
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from materials.mixins import SerializerByMethodMixin
 from materials.models import Material
@@ -30,6 +32,8 @@ class RetrieverUpdateProductView(
 
 
 class CompanyMaterialsView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCompanyOwnerOrAdmin]
+
     queryset = Material.objects.all()
     lookup_url_kwarg = "id"
     serializer_map = {
@@ -54,6 +58,8 @@ class CompanyMaterialsView(SerializerByMethodMixin, generics.ListCreateAPIView):
 
 
 class CompanyMaterialsDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsCompanyOwnerOrAdmin]
+
     serializer_class = MaterialCompanySerializer
     queryset = Material.objects.all()
 
