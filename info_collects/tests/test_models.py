@@ -27,7 +27,7 @@ class InfoCollectModelTestCase(TestCase):
 
     # InfoCollect Model Attributes
 
-    def info_collect_model_attributes(self, order):
+    def info_collect_model_attributes(self):
         
         info_collect_model = {
             "id": {
@@ -73,16 +73,16 @@ class InfoCollectModelTestCase(TestCase):
         info_collect = InfoCollect.objects.get(id=self.info_collect.id)
         for field in info_collect_model:
             self.assertIsInstance(info_collect._meta.get_field(field), info_collect_model[field]["instance"],
-                msg=f"{order}.1) InfoCollect's {field} field type error")
+                msg=f"1) InfoCollect's {field} field type error")
             for parameter in info_collect_model[field]["parameters"]:
                 self.assertEquals(getattr(info_collect._meta.get_field(field), parameter), info_collect_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) InfoCollect's {field} field {parameter} error")
+                    msg=f"2) InfoCollect's {field} field {parameter} error")
 
 
-    def info_collect_field_contents(self, order):
+    def info_collect_field_contents(self):
         info_collect = InfoCollect.objects.get(id=self.info_collect.id)
         for field in self.info_collect_data:
             self.assertEquals(getattr(info_collect, field), self.info_collect_data[field],
-                msg=f"{order}.1) InfoCollect's {field} content error")
+                msg=f"1) InfoCollect's {field} content error")
            
 
