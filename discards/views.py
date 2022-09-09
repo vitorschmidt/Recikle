@@ -1,6 +1,8 @@
 from companies.models import Company
+from companies.permissions import IsCompanyOwnerOrAdmin
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from discards.mixins import SerializerByMethodMixin
 from discards.models import Discard
@@ -13,6 +15,8 @@ def get_object_by_id(model, **kwargs):
 
 
 class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCompanyOwnerOrAdmin]
+
     queryset = Discard.objects.all()
     serializer_map = {
         "GET": ListDiscardSerializer,
@@ -22,6 +26,7 @@ class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
     lookup_url_kwarg = "id"
 
     def get_queryset(self):
+
         company_id = self.kwargs["id"]
         company = get_object_by_id(Company, id=company_id)
         discards = Discard.objects.filter(companies=company)
@@ -29,6 +34,7 @@ class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
         return discards
 
     def perform_create(self, serializer):
+
         company_id = self.kwargs["id"]
         company = get_object_or_404(Company, id=company_id)
 
@@ -36,6 +42,9 @@ class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
 
 
 class DiscardDetailsView(generics.RetrieveUpdateDestroyAPIView):
+
+    permission_classes = [IsAuthenticated, IsCompanyOwnerOrAdmin]
+
     serializer_class = ListDiscardSerializer
     queryset = Discard.objects.all()
 
