@@ -16,7 +16,7 @@ import django_on_heroku
 import dotenv
 
 dotenv.load_dotenv()
-django_on_heroku.settings(locals())
+django_on_heroku.settings(locals(),staticfiles=False)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
