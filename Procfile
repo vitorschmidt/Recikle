@@ -1,1 +1,1 @@
-web: gunicorn recikle.wsgi
+web: gunicorn management.wsgi
