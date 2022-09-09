@@ -2,7 +2,7 @@ from accumulation_points.views import (
     AccumulationPointDetailsView,
     AccumulationPointView,
 )
-from django.urls import include, path
+from django.urls import path
 from info_collects.views import (
     MaterialInfoCollectionDetailsView,
     MaterialInfoCollectionView,

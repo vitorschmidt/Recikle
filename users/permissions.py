@@ -10,3 +10,4 @@ class IsOwnerOrAdmin(permissions.BasePermission):
             return True
 
         return user.id == request.user.id or request.user.is_superuser
+

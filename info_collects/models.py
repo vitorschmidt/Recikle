@@ -1,6 +1,4 @@
-
 from django.db import models
-
 
 class InfoCollect(models.Model):
     user_id = models.ManyToManyField("users.User", related_name="info_collect")

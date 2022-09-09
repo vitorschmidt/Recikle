@@ -1,5 +1,5 @@
 """
-This package handles the user module tests.
+This package handles the companies module tests.
 
 PACKAGE CONTENTS
     test_models
