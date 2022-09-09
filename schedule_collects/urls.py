@@ -1,10 +1,8 @@
 from django.urls import include, path
 
-from schedule_collects.views import ScheduleDetailsView,ScheduleView
+from schedule_collects.views import ListSchedulesDetailsView, ListSchedulesView
 
 urlpatterns = [
-    path("schedule/",ScheduleView.as_view()),
-    path('schedule/materials/<int:id>/',ScheduleView.as_view()),
-    path('schedule/materials/<int:id>/<int:schedule_id>/',ScheduleDetailsView.as_view()),
-
+    path("schedules/", ListSchedulesView.as_view()),
+    path("schedules/<int:id>/", ListSchedulesDetailsView.as_view()),
 ]
