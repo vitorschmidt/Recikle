@@ -3,7 +3,8 @@ from companies.tests import CompanyModelTestCase, CompanyViewTestCase
 from discards.tests import DiscardModelTestCase
 from django.test import TestCase
 from info_collects.tests import InfoCollectModelTestCase
-from info_companies.tests import InfoCompanyModelTestCase
+from info_companies.tests import (InfoCompanyModelTestCase,
+                                  InfoCompanyViewTestCase)
 from materials.tests import MaterialModelTestCase
 from schedule_collects.tests import ScheduleCollectModelTestCase
 from users.tests import UserModelTestCase, UserViewTestCase
@@ -107,6 +108,37 @@ class TestC1(InfoCompanyModelTestCase):
     def test_C102(self):
         """INFOCOMPANY MODEL: Check info_company instance contents"""
         self.info_company_field_contents()
+
+
+class TestC2(InfoCompanyViewTestCase):
+    
+    def test_C201(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (superuser credentials)"""
+        self.superuser_get_infocompany()
+
+    def test_C202(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (person credentials)"""
+        self.person_get_infocompany()
+
+    def test_C203(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (company credentials)"""
+        self.company_get_infocompany()
+
+    def test_C204(self):
+        """INFOCOMPANY VIEW: POST /api/info_company/ (superuser credentials)"""
+        self.superuser_post_infocompany()
+
+    def test_C205(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/<int:id> (superuser credentials)"""
+        self.superuser_get_infocompany_id()
+
+    def test_C206(self):
+        """INFOCOMPANY VIEW: PATCH /api/info_company/<int:id> (superuser credentials)"""
+        self.superuser_patch_infocompany_id()
+
+    def test_C207(self):
+        """INFOCOMPANY VIEW: PATCH /api/info_company/<int:id> invalid body (superuser credentials)"""
+        self.superuser_patch_invalid_body_infocompany_id()
 
 
 class TestD1(MaterialModelTestCase):

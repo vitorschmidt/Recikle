@@ -60,6 +60,7 @@ class CompanyViewTestCase(TestCase):
         
         self.company = Company.objects.create(**self.company_data)
 
+
     # PATH /api/companies/
 
     def superuser_get_company(self):
@@ -129,7 +130,6 @@ class CompanyViewTestCase(TestCase):
             msg=f"1) GET {route} error (company credentials): {content}")
         self.assertIsInstance(content["results"], list,
             msg=f"2) GET {route} error (company credentials); response is not list: {content}")
-
 
 
     def superuser_post_company(self):
@@ -284,11 +284,12 @@ class CompanyViewTestCase(TestCase):
         self.assertEquals(content, {'name': ['This field is required.'], 'collect_days': ['This field is required.']},
             msg=f"2) POST {route} invalid body error (superuser credentials): {content}")   
 
-               
+
+    # PATH /api/companies/<int:id>/
     
     def superuser_get_company_id(self):
         company = []
-        for i in range(1,10):
+        for i in range(1,11):
             company.append(Company.objects.create(
             **{"name": f"Random Company {i}",
                "collect_days": i,
@@ -315,13 +316,12 @@ class CompanyViewTestCase(TestCase):
         for key in ["id", "name", "collect_days", "donation", "materials"]:
             self.assertTrue(key in content, 
             msg=f"2) GET {route} error (superuser credentials): Key '{key}' not in response; {content}")   
-                
     
 
     def superuser_patch_company_id(self):
         
         company = []
-        for i in range(1,10):
+        for i in range(1,11):
             company.append(Company.objects.create(
             **{"name": f"Random Company {i}",
                "collect_days": i,
@@ -360,11 +360,10 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) PATCH {route} error (superuser credentials): content doesn't match; {content}")   
                 
 
-
     def superuser_patch_duplicate_company_id(self):
         
         company = []
-        for i in range(1,10):
+        for i in range(1,11):
             company.append(Company.objects.create(
             **{"name": f"Random Company {i}",
                "collect_days": i,
@@ -399,4 +398,10 @@ class CompanyViewTestCase(TestCase):
         self.assertEquals(content, {'detail': 'name already registered'},
             msg=f"2) POST {route} duplicate error (superuser credentials): {content}")   
                 
-        
+
+# PATH /api/companies/<int:id>/discards/
+# PATH /api/companies/<int:id>/discards/<int:discard_id>/
+# PATH /api/companies/<int:id>/materials/
+# PATH /api/companies/<int:id>/materials/<int:material_id>/
+# PATH /api/companies/<int:id>/info_collection/
+# PATH /api/companies/<int:id>/info_company/
