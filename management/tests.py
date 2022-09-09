@@ -1,8 +1,11 @@
 from accumulation_points.tests import AccumulationPointModelTestCase
 from companies.tests import CompanyModelTestCase, CompanyViewTestCase
+from discards.tests import DiscardModelTestCase
 from django.test import TestCase
+from info_collects.tests import InfoCollectModelTestCase
 from info_companies.tests import InfoCompanyModelTestCase
 from materials.tests import MaterialModelTestCase
+from schedule_collects.tests import ScheduleCollectModelTestCase
 from users.tests import UserModelTestCase, UserViewTestCase
 
 
@@ -96,5 +99,37 @@ class TestE1(AccumulationPointModelTestCase):
 
     def test_E102(self):
         """ACCUMULATION_POINT MODEL: Check accumulation_point instance contents"""
-        self.accumulation_point_field_contents("D102")
+        self.accumulation_point_field_contents("E102")
+
+class TestF1(InfoCollectModelTestCase):
+    
+    def test_F101(self):
+        """INFO_COLLECT MODEL: Check info_collect model attributes"""
+        self.info_collect_model_attributes("F101")
+
+    def test_F102(self):
+        """INFO_COLLECT MODEL: Check info_collect instance contents"""
+        self.info_collect_field_contents("F102")
+
+
+class TestG1(ScheduleCollectModelTestCase):
+    
+    def test_G101(self):
+        """SCHEDULE_COLLECT MODEL: Check schedule_collect model attributes"""
+        self.schedule_collect_model_attributes("G101")
+
+    def test_G102(self):
+        """SCHEDULE_COLLECT MODEL: Check schedule_collect instance contents"""
+        self.schedule_collect_field_contents("G102")
+
+
+class TestH1(DiscardModelTestCase):
+    
+    def test_H101(self):
+        """DISCARD MODEL: Check discard model attributes"""
+        self.discard_model_attributes("H101")
+
+    def test_H102(self):
+        """DISCARD MODEL: Check discard instance contents"""
+        self.discard_field_contents("H102")
 
