@@ -34,7 +34,7 @@ class ScheduleCollectModelTestCase(TestCase):
 
     # ScheduleCollect Model Attributes
 
-    def schedule_collect_model_attributes(self, order):
+    def schedule_collect_model_attributes(self):
         
         schedule_collect_model = {
             "id": {
@@ -74,16 +74,16 @@ class ScheduleCollectModelTestCase(TestCase):
         schedule_collect = ScheduleCollect.objects.get(id=self.schedule_collect.id)
         for field in schedule_collect_model:
             self.assertIsInstance(schedule_collect._meta.get_field(field), schedule_collect_model[field]["instance"],
-                msg=f"{order}.1) ScheduleCollect's {field} field type error")
+                msg=f"1) ScheduleCollect's {field} field type error")
             for parameter in schedule_collect_model[field]["parameters"]:
                 self.assertEquals(getattr(schedule_collect._meta.get_field(field), parameter), schedule_collect_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) ScheduleCollect's {field} field {parameter} error")
+                    msg=f"2) ScheduleCollect's {field} field {parameter} error")
 
 
-    def schedule_collect_field_contents(self, order):
+    def schedule_collect_field_contents(self):
         schedule_collect = ScheduleCollect.objects.get(id=self.schedule_collect.id)
         for field in self.schedule_collect_data:
             self.assertEquals(getattr(schedule_collect, field), self.schedule_collect_data[field],
-                msg=f"{order}.1) ScheduleCollect's {field} content error")
+                msg=f"1) ScheduleCollect's {field} content error")
            
 

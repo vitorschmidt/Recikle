@@ -19,7 +19,7 @@ class MaterialModelTestCase(TestCase):
 
     # Material Model Attributes
 
-    def material_model_attributes(self, order):
+    def material_model_attributes(self):
         
         material_model = {
             "id": {
@@ -64,13 +64,13 @@ class MaterialModelTestCase(TestCase):
         material = Material.objects.get(name=self.material_data["name"])
         for field in material_model:
             self.assertIsInstance(material._meta.get_field(field), material_model[field]["instance"],
-                msg=f"{order}.1) Material's {field} field type error")
+                msg=f"1) Material's {field} field type error")
             for parameter in material_model[field]["parameters"]:
                 self.assertEquals(getattr(material._meta.get_field(field), parameter), material_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) User's {field} field {parameter} error")
+                    msg=f"2) User's {field} field {parameter} error")
 
 
-    def material_field_contents(self, order):
+    def material_field_contents(self):
         
         material_1 = {
             "name": "Material 1",
@@ -96,11 +96,11 @@ class MaterialModelTestCase(TestCase):
 
         for field in material_1:
             self.assertEquals(getattr(instance_1, field), material_1[field],
-                msg=f"{order}.1) Material 1's {field} content error")
+                msg=f"1) Material 1's {field} content error")
 
         instance_2 = Material.objects.get(name=material_2["name"])
 
         for field in material_2:
             self.assertEquals(getattr(instance_2, field), material_2[field],
-                msg=f"{order}.2) Material 2's {field} content error")
+                msg=f"2) Material 2's {field} content error")
 

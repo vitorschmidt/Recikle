@@ -13,11 +13,11 @@ class TestA1(UserModelTestCase):
     
     def test_A101(self):
         """USER MODEL: Check user model attributes"""
-        self.user_model_attributes("A101")
+        self.user_model_attributes()
 
     def test_A102(self):
         """USER MODEL: Check user type"""
-        self.user_type("A102")
+        self.user_type()
  
 # class TestA2(UserViewTestCase):
     
@@ -46,90 +46,119 @@ class TestB1(CompanyModelTestCase):
     
     def test_B101(self):
         """COMPANY MODEL: Check company model attributes"""
-        self.company_model_attributes("B101")
+        self.company_model_attributes()
 
     def test_B102(self):
         """COMPANY MODEL: Check company instance contents"""
-        self.company_field_contents("B102")
+        self.company_field_contents()
 
+class TestB2(CompanyViewTestCase):
+    
+    def test_B201(self):
+        """COMPANY VIEW: GET /api/company/ (superuser credentials)"""
+        self.superuser_get_company()
+
+    def test_B202(self):
+        """COMPANY VIEW: GET /api/company/ (person credentials)"""
+        self.person_get_company()
+
+    def test_B203(self):
+        """COMPANY VIEW: GET /api/company/ (company credentials)"""
+        self.company_get_company()
+
+    def test_B204(self):
+        """COMPANY VIEW: POST /api/company/ (superuser credentials)"""
+        self.superuser_post_company()
+
+    def test_B205(self):
+        """COMPANY VIEW: POST /api/company/ (person credentials)"""
+        self.person_post_company()
+
+    def test_B206(self):
+        """COMPANY VIEW: POST /api/company/ (company credentials)"""
+        self.company_post_company()
+
+    def test_B207(self):
+        """COMPANY VIEW: POST /api/company/ duplicate (superuser credentials)"""
+        self.superuser_post_duplicate_company()
+
+    def test_B208(self):
+        """COMPANY VIEW: POST /api/company/ invalid body (superuser credentials)"""
+        self.superuser_post_invalid_company()
+
+    def test_B209(self):
+        """COMPANY VIEW: GET /api/company/<int:id> (superuser credentials)"""
+        self.superuser_get_company_id()
+
+    def test_B210(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id> (superuser credentials)"""
+        self.superuser_patch_company_id()
+
+    def test_B211(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id> duplicate (superuser credentials)"""
+        self.superuser_patch_duplicate_company_id()
 
 class TestC1(InfoCompanyModelTestCase):
     
     def test_C101(self):
         """INFOCOMPANY MODEL: Check info_company model attributes"""
-        self.info_company_model_attributes("C101")
+        self.info_company_model_attributes()
 
     def test_C102(self):
         """INFOCOMPANY MODEL: Check info_company instance contents"""
-        self.info_company_field_contents("C102")
-
-
-
-# class TestB2(CompanyViewTestCase):
-    
-#     def test_10(self):
-#         """COMPANY VIEW: Check company creation"""
-#         self.post_company("10")
-
-#     def test_11(self):
-#         """COMPANY VIEW: Check company retrieval"""
-#         self.get_company("11")
-
-#     def test_12(self):
-#         """COMPANY VIEW: Check detailed company retrieval"""
-#         self.get_company("12")
+        self.info_company_field_contents()
 
 
 class TestD1(MaterialModelTestCase):
     
     def test_D101(self):
         """MATERIAL MODEL: Check material model attributes"""
-        self.material_model_attributes("D101")
+        self.material_model_attributes()
 
     def test_D102(self):
         """MATERIAL MODEL: Check material instance contents"""
-        self.material_field_contents("D102")
+        self.material_field_contents()
 
 
 class TestE1(AccumulationPointModelTestCase):
     
     def test_E101(self):
         """ACCUMULATION_POINT MODEL: Check accumulation_point model attributes"""
-        self.accumulation_point_model_attributes("E101")
+        self.accumulation_point_model_attributes()
 
     def test_E102(self):
         """ACCUMULATION_POINT MODEL: Check accumulation_point instance contents"""
-        self.accumulation_point_field_contents("E102")
+        self.accumulation_point_field_contents()
 
 class TestF1(InfoCollectModelTestCase):
     
     def test_F101(self):
         """INFO_COLLECT MODEL: Check info_collect model attributes"""
-        self.info_collect_model_attributes("F101")
+        self.info_collect_model_attributes()
 
     def test_F102(self):
         """INFO_COLLECT MODEL: Check info_collect instance contents"""
-        self.info_collect_field_contents("F102")
+        self.info_collect_field_contents()
 
 
 class TestG1(ScheduleCollectModelTestCase):
     
     def test_G101(self):
         """SCHEDULE_COLLECT MODEL: Check schedule_collect model attributes"""
-        self.schedule_collect_model_attributes("G101")
+        self.schedule_collect_model_attributes()
 
     def test_G102(self):
         """SCHEDULE_COLLECT MODEL: Check schedule_collect instance contents"""
-        self.schedule_collect_field_contents("G102")
+        self.schedule_collect_field_contents()
 
 
 class TestH1(DiscardModelTestCase):
     
     def test_H101(self):
         """DISCARD MODEL: Check discard model attributes"""
-        self.discard_model_attributes("H101")
+        self.discard_model_attributes()
 
     def test_H102(self):
         """DISCARD MODEL: Check discard instance contents"""
-        self.discard_field_contents("H102")
+        self.discard_field_contents()
 
