@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404, render
 from materials.models import Material
 from rest_framework import generics
+from users.permissions import IsOwnerOrAdmin
 
 from schedule_collects.mixins import SerializerByMethodMixin
 from schedule_collects.models import ScheduleCollect
+from schedule_collects.permissions import IsOwnerUserOrAdmin
 from schedule_collects.serializers import ListScheduleSerializer, ScheduleSerializer
 
 
@@ -35,6 +37,7 @@ class ScheduleView(SerializerByMethodMixin, generics.ListCreateAPIView):
 class ScheduleDetailsView(
     SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
 ):
+    permission_classes = [IsOwnerUserOrAdmin]
     queryset = ScheduleCollect.objects.all()
     serializer_map = {
         "GET": ListScheduleSerializer,
