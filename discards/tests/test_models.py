@@ -1,19 +1,8 @@
-from uuid import UUID
-
 from discards.models import Discard
 from django.db import models
-from django.test import Client, TestCase
-from rest_framework import status
+from django.test import TestCase
 
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
-        
-        
 class DiscardModelTestCase(TestCase):
     
     def setUp(self):
@@ -22,14 +11,13 @@ class DiscardModelTestCase(TestCase):
             "address": "Discard's Address",
             "city": "Discard's City",
             "quantity": 5,
-            #"materials": None,
         }
         
         self.discard = Discard.objects.create(**self.discard_data)
 
     # Discard Model Attributes
 
-    def discard_model_attributes(self, order):
+    def discard_model_attributes(self):
         
         discard_model = {
             "id": {
@@ -51,7 +39,7 @@ class DiscardModelTestCase(TestCase):
                 }
             },
             "quantity": {
-                "instance": models.PositiveBigIntegerField,
+                "instance": models.PositiveIntegerField,
                 "parameters": {
                 }
             },
@@ -65,16 +53,16 @@ class DiscardModelTestCase(TestCase):
         discard = Discard.objects.get(id=self.discard.id)
         for field in discard_model:
             self.assertIsInstance(discard._meta.get_field(field), discard_model[field]["instance"],
-                msg=f"{order}.1) Discard's {field} field type error")
+                msg=f"1) Discard's {field} field type error")
             for parameter in discard_model[field]["parameters"]:
                 self.assertEquals(getattr(discard._meta.get_field(field), parameter), discard_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) Discard's {field} field {parameter} error")
+                    msg=f"2) Discard's {field} field {parameter} error")
 
 
-    def discard_field_contents(self, order):
+    def discard_field_contents(self):
         discard = Discard.objects.get(id=self.discard.id)
         for field in self.discard_data:
             self.assertEquals(getattr(discard, field), self.discard_data[field],
-                msg=f"{order}.1) Discard's {field} content error")
+                msg=f"1) Discard's {field} content error")
            
 

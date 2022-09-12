@@ -1,20 +1,8 @@
-from uuid import UUID
-
 from accumulation_points.models import AccumulationPoint
 from django.db import models
-from django.test import Client, TestCase
-from materials.models import Material
-from rest_framework import status
+from django.test import TestCase
 
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
-        
-        
 class AccumulationPointModelTestCase(TestCase):
     
     def setUp(self):
@@ -28,7 +16,7 @@ class AccumulationPointModelTestCase(TestCase):
 
     # AcuumulationPoint Model Attributes
 
-    def accumulation_point_model_attributes(self, order):
+    def accumulation_point_model_attributes(self):
         
         accumulation_point_model = {
             "id": {
@@ -53,16 +41,16 @@ class AccumulationPointModelTestCase(TestCase):
         accumulation_point = AccumulationPoint.objects.get(id=self.accumulation_point.id)
         for field in accumulation_point_model:
             self.assertIsInstance(accumulation_point._meta.get_field(field), accumulation_point_model[field]["instance"],
-                msg=f"{order}.1) AccumulationPoint's {field} field type error")
+                msg=f"1) AccumulationPoint's {field} field type error")
             for parameter in accumulation_point_model[field]["parameters"]:
                 self.assertEquals(getattr(accumulation_point._meta.get_field(field), parameter), accumulation_point_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) AccumulationPoint's {field} field {parameter} error")
+                    msg=f"2) AccumulationPoint's {field} field {parameter} error")
 
 
-    def accumulation_point_field_contents(self, order):
+    def accumulation_point_field_contents(self):
         accumulation_point = AccumulationPoint.objects.get(id=self.accumulation_point.id)
         for field in self.accumulation_point_data:
             self.assertEquals(getattr(accumulation_point, field), self.accumulation_point_data[field],
-                msg=f"{order}.1) AccumulationPoint's {field} content error")
+                msg=f"1) AccumulationPoint's {field} content error")
            
 

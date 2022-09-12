@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from companies.models import Company
+from companies.permissions import IsCompanyOrAdmin, IsCompanyOwnerOrAdmin
 from companies.serializers import CompanySerializer, ListInfoCollectionCompanySerializer
 
 
@@ -11,11 +13,15 @@ def get_object_by_id(model, **kwargs):
 
 
 class CompanyView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCompanyOrAdmin]
+
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
 
 class CompanyDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsCompanyOwnerOrAdmin]
+
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
