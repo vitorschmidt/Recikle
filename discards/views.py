@@ -56,3 +56,8 @@ class DiscardDetailsView(generics.RetrieveUpdateDestroyAPIView):
         discards = Discard.objects.filter(companies=company)
 
         return discards
+
+
+class DiscardsView(generics.ListAPIView):
+    serializer_class = ListDiscardSerializer
+    queryset = Discard.objects.all()

@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404
 from materials.mixins import SerializerByMethodMixin
 from materials.models import Material
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from users.models import User
+from users.permissions import IsOwnerOrAdmin
 
 from info_collects.models import InfoCollect
 from info_collects.serializers import (
@@ -59,6 +61,8 @@ class UserInfoCollectionDetailsView(
 
 
 class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     queryset = InfoCollect.objects.all()
     serializer_map = {
         "GET": ListInfoCollectSerializer,
@@ -83,6 +87,7 @@ class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPI
 class MaterialInfoCollectionDetailsView(
     SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
 ):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrAdmin]
     queryset = InfoCollect.objects.all()
     serializer_map = {
         "GET": ListInfoCollectSerializer,

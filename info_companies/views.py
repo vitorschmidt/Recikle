@@ -1,13 +1,16 @@
 from companies.models import Company
+from companies.permissions import IsOnlyCompanyDono
 from companies.serializers import InfoCompanyListSerializer
-
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from info_companies.models import InfoCompany
 from info_companies.serializers import InfoCompanySerializer
 
 
 class InfoCompanyView(generics.ListCreateAPIView):
+    permission_classes = [IsOnlyCompanyDono]
+
     queryset = InfoCompany.objects.all()
     serializer_class = InfoCompanySerializer
 

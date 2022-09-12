@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 from materials.mixins import SerializerByMethodMixin
 from materials.models import Material
+from materials.permissions import IsOnlyAdmin
 from materials.serializers import (
     MaterialCompanySerializer,
     MaterialSerializer,
@@ -19,13 +20,14 @@ def get_object_by_id(model, **kwargs):
 
 
 class ListCreateMaterialView(generics.ListCreateAPIView):
+    permission_classes = [IsOnlyAdmin]
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
 
 
-class RetrieverUpdateProductView(
-    SerializerByMethodMixin, generics.RetrieveUpdateAPIView
-):
+class RetrieverUpdateProductView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOnlyAdmin]
+
     queryset = Material.objects.all()
     lookup_url_kwarg = "id"
     serializer_class = MaterialSerializer
