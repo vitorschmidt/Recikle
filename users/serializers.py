@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
+from schedule_collects.models import ScheduleCollect
+from schedule_collects.serializers import ScheduleSerializer
 
 from users.models import User
 
@@ -61,13 +63,5 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 class UserScheduleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = [
-            "id",
-            "password",
-            "username",
-            "first_name",
-            "last_name",
-            "is_company",
-            "schedule_collect",
-        ]
+        model = ScheduleCollect
+        fields = ["id", "days", "scheduling", "city", "materials"]

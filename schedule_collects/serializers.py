@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 from users.models import User
-from users.serializers import UserSerializer
 
 from schedule_collects.models import ScheduleCollect
 
@@ -14,7 +13,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleCollect
         fields = ["id", "days", "scheduling", "city", "user"]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "user"]
 
     def create(self, validated_data):
         user_pop = validated_data.pop("user")
