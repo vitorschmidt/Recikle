@@ -9,7 +9,6 @@ class AccumulationPointModelTestCase(TestCase):
         
         self.accumulation_point_data = {
             "address": "Accumulation Point Address",
-            #"materials": None,
         }
         
         self.accumulation_point = AccumulationPoint.objects.create(**self.accumulation_point_data)
@@ -28,7 +27,7 @@ class AccumulationPointModelTestCase(TestCase):
             "address": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 256
+                    "max_length": 150
                 }
             },
             "materials": {

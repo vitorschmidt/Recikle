@@ -371,7 +371,7 @@ class InfoCompanyViewTestCase(TestCase):
         body = {
             "telephone": 12345678+random.randint(0, 9),
             "email": f"company{random.randint(100, 200)}@email.com",
-            "address": ''.join(random.choices(string.ascii_uppercase +string.digits, k=150)),
+            "address": ''.join(random.choices(string.ascii_uppercase +string.digits, k=500)),
         }
         response = self.client.patch(
             route,

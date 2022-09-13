@@ -35,7 +35,7 @@ class DiscardModelTestCase(TestCase):
             "city": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 50
+                    "max_length": 120
                 }
             },
             "quantity": {

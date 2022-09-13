@@ -247,7 +247,7 @@ class MaterialViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        for key in ["id", "name", "dangerousness", "category", "infos", "decomposition", "companies"]:
+        for key in ["id", "name", "dangerousness", "category", "infos", "decomposition"]:
             self.assertTrue(key in content, 
                 msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
 
@@ -256,7 +256,7 @@ class MaterialViewTestCase(TestCase):
 
         random_id = random.randint(0, 9)
         route = f"/api/materials/{self.random_material[random_id].id}/"
-        valid_status_code = status.HTTP_201_CREATED
+        valid_status_code = status.HTTP_200_OK
         
         token = self.client.post(
             '/api/login/',
@@ -281,7 +281,7 @@ class MaterialViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) PATCH {route} error (superuser credentials): {content}")
-        for key in ["id", "name", "dangerousness", "category", "infos", "decomposition", "companies"]:
+        for key in ["id", "name", "dangerousness", "category", "infos", "decomposition"]:
             self.assertTrue(key in content, 
                 msg=f"2) PATCH {route} error (superuser credentials): Key '{key}' not in response; {content}")   
         for key in ["name", "dangerousness", "category", "infos", "decomposition"]:
@@ -404,7 +404,7 @@ class MaterialViewTestCase(TestCase):
             self.assertTrue(key in content, 
                 msg=f"2) PATCH {route} error (superuser credentials): Key '{key}' not in response; {content}")   
         for key in ["address"]:
-            self.assertEquals(self.random_material[random_id].key, content[key], 
+            self.assertEquals(getattr(self.random_material[random_id], key), content[key], 
                 msg=f"3) PATCH {route} error (superuser credentials): '{key}' field doesn't match; {content}")   
 
 
