@@ -47,11 +47,20 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
-    'drf_spectacular',
+    "drf_spectacular",
 ]
 
 
-MY_APPS = ["users", "materials", "companies", "discards", "accumulation_points", "info_collects", "info_companies", "schedule_collects"]
+MY_APPS = [
+    "users",
+    "materials",
+    "companies",
+    "discards",
+    "accumulation_points",
+    "info_collects",
+    "info_companies",
+    "schedule_collects",
+]
 
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -96,7 +105,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "localhost",
+        "HOST": "db",
         "PORT": 5432,
     },
     "test": {
@@ -142,20 +151,19 @@ SIMPLE_JWT = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 4,
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Recikle',
-    'DESCRIPTION': 'Projeto destinado a ajudar na reciclagem e coleta de lixo.',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Recikle",
+    "DESCRIPTION": "Projeto destinado a ajudar na reciclagem e coleta de lixo.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # Static files (CSS, JavaScript, Images)
