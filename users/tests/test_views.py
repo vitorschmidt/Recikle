@@ -123,7 +123,7 @@ class UserViewTestCase(TestCase):
     
     # PATH /api/register/
 
-    def newperson_register(self):
+    def newsuperuser_register(self):
         
         route = "/api/register/"
         valid_status_code = status.HTTP_201_CREATED
@@ -137,6 +137,7 @@ class UserViewTestCase(TestCase):
                 "email": f"newuser{code}@kenzie.com",
                 "is_company": False,
                 "password": f"NewUser{code}Password123@",
+                "is_superuser": False
             }
             response = self.client.post(
                 route,
@@ -147,6 +148,54 @@ class UserViewTestCase(TestCase):
             content = response.json()
             self.assertEquals(response.status_code, valid_status_code,
                 msg=f"1) POST {route} error (person): {content}")
+            for key in ["password"]:
+                self.assertFalse(key in content, 
+                    msg=f"2) POST {route} error (company credentials): Key '{key}' in response: {content}")   
+
+            login_route = "/admin/"
+            login_valid_status_code = status.HTTP_200_OK
+            login_body = {
+                "username": user["username"],
+                "password": user["password"]
+            }
+            login_response = self.client.post(
+                login_route, 
+                login_body, 
+                content_type='application/json',
+                HTTP_ACCEPT='application/json'
+            )
+            login_content = login_response.json()
+            self.assertEquals(login_response.status_code, login_valid_status_code,
+                msg=f"3) POST {login_route} error ({user['username']}): {login_content}")
+
+
+    def newuser_register(self):
+        
+        route = "/api/register/"
+        valid_status_code = status.HTTP_201_CREATED
+
+        for code in range(10):
+            user = {
+                "username": f"newuser{code}",
+                "first_name": f"Newuser{code}",
+                "last_name": "Kenzie",
+                "city": f"Newuser{code}'s City",
+                "email": f"newuser{code}@kenzie.com",
+                "is_company": (code % 2 == 0),
+                "password": f"NewUser{code}Password123@",
+            }
+            response = self.client.post(
+                route,
+                user,
+                content_type='application/json',
+                HTTP_ACCEPT='application/json'
+                )
+            content = response.json()
+            self.assertEquals(response.status_code, valid_status_code,
+                msg=f"1) POST {route} error (anonymous): {content}")
+            for key in ["password"]:
+                self.assertFalse(key in content, 
+                    msg=f"2) POST {route} error (anonymous): Key '{key}' in response: {content}")   
 
             login_route = "/api/login/"
             login_valid_status_code = status.HTTP_200_OK
@@ -162,7 +211,7 @@ class UserViewTestCase(TestCase):
             )
             login_content = login_response.json()
             self.assertEquals(login_response.status_code, login_valid_status_code,
-                msg=f".2) POST {login_route} error ({user['username']}): {login_content}")
+                msg=f"3) POST {login_route} error ({user['username']}): {login_content}")
 
 
     def newcompany_register(self):
@@ -184,6 +233,9 @@ class UserViewTestCase(TestCase):
             content = response.json()
             self.assertEquals(response.status_code, valid_status_code,
                 msg=f"1) POST {route} error (company): {content}")
+            for key in ["password"]:
+                self.assertFalse(key in content, 
+                    msg=f"2) POST {route} error (company credentials): Key '{key}' in response: {content}")   
 
             login_route = "/api/login/"
             login_valid_status_code = status.HTTP_200_OK
@@ -196,7 +248,7 @@ class UserViewTestCase(TestCase):
             )
             login_content = login_response.json()
             self.assertEquals(login_response.status_code, login_valid_status_code,
-                msg=f".2) POST {login_route} error ({user['username']}): {login_content}")
+                msg=f"3) POST {login_route} error ({user['username']}): {login_content}")
 
     
     # PATH /api/users/
@@ -227,6 +279,167 @@ class UserViewTestCase(TestCase):
     def person_get_users(self):
     
         route = "/api/users/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (person credentials); invalid response message: {content}")
+
+    
+    def company_get_users(self):
+    
+        route = "/api/users/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (person credentials); invalid response message: {content}")
+
+    
+    def anonymous_get_users(self):
+
+        route = "/api/users/"
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (anonymous): {content}")
+        self.assertEquals(content, {'detail': 'Authentication credentials were not provided.'},
+            msg=f"2) GET {route} error (anonymous); invalid response message: {content}")
+
+
+            
+    # PATH /api/user/<user_id>/
+    
+    def superuser_get_superuserid(self):
+
+        route = f"/api/user/{self.superuser.id}/"
+        valid_status_code = status.HTTP_200_OK
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (superuser credentials): {content}")
+        for key in ["password"]:
+            self.assertFalse(key in content, 
+                msg=f"2) GET {route} error (superuser credentials): Key '{key}' in response: {content}")   
+
+
+
+    def superuser_get_personid(self):
+
+        route = f"/api/user/{self.person.id}/"
+        valid_status_code = status.HTTP_200_OK
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (superuser credentials): {content}")
+        for key in ["password"]:
+            self.assertFalse(key in content, 
+                msg=f"2) GET {route} error (superuser credentials): Key '{key}' in response: {content}")   
+
+
+    def superuser_get_companyid(self):
+
+        route = f"/api/user/{self.company.id}/"
+        valid_status_code = status.HTTP_200_OK
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (superuser credentials): {content}")
+        for key in ["password"]:
+            self.assertFalse(key in content, 
+                msg=f"2) GET {route} error (superuser credentials): Key '{key}' in response: {content}")   
+
+
+    def person_get_superuserid(self):
+
+        route = f"/api/user/{self.superuser.id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (person credentials); invalid response message: {content}")
+
+
+    def person_get_personid(self):
+
+        route = f"/api/user/{self.person.id}/"
         valid_status_code = status.HTTP_200_OK
 
         token = self.client.post(
@@ -243,13 +456,83 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (person credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (person credentials); response is not list: {content}")
+        for key in ["password"]:
+            self.assertFalse(key in content, 
+                msg=f"2) GET {route} error (superuser credentials): Key '{key}' in response: {content}")   
 
+
+    def person_get_companyid(self):
+
+        route = f"/api/user/{self.company.id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (person credentials); invalid response message: {content}")
+
+
+    def company_get_superuserid(self):
+
+        route = f"/api/user/{self.superuser.id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (company credentials); invalid response message: {content}")
     
-    def company_get_users(self):
-    
-        route = "/api/users/"
+
+    def company_get_personid(self):
+
+        route = f"/api/user/{self.person.id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+        self.assertEquals(content, {'detail': 'You do not have permission to perform this action.'},
+            msg=f"2) GET {route} error (company credentials); invalid response message: {content}")
+        
+
+    def company_get_companyid(self):
+
+        route = f"/api/user/{self.company.id}/"
         valid_status_code = status.HTTP_200_OK
 
         token = self.client.post(
@@ -266,12 +549,28 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (company credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (company credentials); response is not list: {content}")
+        for key in ["password"]:
+            self.assertFalse(key in content, 
+                msg=f"2) GET {route} error (company credentials): Key '{key}' in response: {content}")   
 
+
+    def anonymous_get_userid(self):
+
+        for user in [self.superuser, self.person, self.company]:
+            route = f"/api/user/{user.id}/"
+            valid_status_code = status.HTTP_401_UNAUTHORIZED
+
+            response = self.client.get(
+                route,
+                HTTP_ACCEPT='application/json',
+            )
+            content = response.json()
+            self.assertEquals(response.status_code, valid_status_code,
+                msg=f"1) GET {route} error (anonymous): {content}")
+        self.assertEquals(content, {'detail': 'Authentication credentials were not provided.'},
+            msg=f"2) GET {route} error (anonymous); invalid response message: {content}")
         
-    
-    
+
     # GET/PATCH User Detail
     
     

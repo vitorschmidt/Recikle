@@ -1,14 +1,18 @@
 import random
+from datetime import datetime
 from uuid import UUID
 
+from accumulation_points.models import AccumulationPoint
 from companies.models import Company
 from discards.models import Discard
 from django.db import models
 from django.test import Client, TestCase
+from django.utils.timezone import make_aware
 from info_collects.models import InfoCollect
 from info_companies.models import InfoCompany
 from materials.models import Material, Recomendation
 from rest_framework import status
+from schedule_collects.models import ScheduleCollect
 from users.models import User
 
 
@@ -56,59 +60,154 @@ class CompanyViewTestCase(TestCase):
         self.person = User.objects.create_user(**self.profiles["Person"])
         self.company = User.objects.create_user(**self.profiles["Company"])
 
-        self.company_data = {
-            "name": "Company",
+        # self.company_data = {
+        #     "name": "Company",
+        #     "collect_days": 5,
+        #     "donation": True,
+        # }
+        
+        # self.company = Company.objects.create(**self.company_data)
+
+        self.superuser_company = Company.objects.create(**{
+            "name": "Superuser Company's Name",
             "collect_days": 5,
             "donation": True,
-        }
-        
-        self.company = Company.objects.create(**self.company_data)
-        self.random_company = []
-        self.random_discard = []
-        self.random_material = []
-        self.random_infocompany = []
-        self.random_infocollect = []
+            "owner_id": self.superuser
+        })
+        self.superuser_discard = Discard.objects.create(**{
+            "address": "Superuser Discard's Address",
+            "city": "Superuser Discard's City",
+            "quantity": 4,
+        })
+        self.superuser_discard.companies.sets = self.superuser_company
+        self.superuser_material = Material.objects.create(**{
+            "name": "Superuser Material's Name",
+            "dangerousness": False,
+            "category": Recomendation.RECICLAVEL,
+            "infos": "Superuser Material's Infos",
+            "decomposition": 2
+        })
+        self.superuser_company.materials.sets = self.superuser_material
+        self.superuser_infocompany = InfoCompany.objects.create(**{
+            "telephone": 12345678,
+            "email": "superuser@company.com",
+            "address": "Superuser InfoCompany's Address",
+            "company": self.superuser_company
+        })
+        self.superuser_infocollect = InfoCollect.objects.create(**{
+            "cep": 10000000,
+            "address": "Superuser InfoCollect's Address",
+            "reference_point": "Superuser InfoCollect's Reference Point",
+            "company": self.superuser_company
+        })
+        self.superuser_infocollect.materials.sets = self.superuser_material
+        self.superuser_infocollect.user_id.sets = self.superuser
+        self.superuser_accumulationpoint = AccumulationPoint.objects.create(**{
+            "address": "Superuser Accumulation Point's Address"
+        })
+        self.superuser_accumulationpoint.materials.sets = self.superuser_material
+        self.superuser_schedulecollect = ScheduleCollect.objects.create(**{
+            "days": 5,
+            "scheduling": make_aware(datetime.now()),
+            "city": "Superuser Schedule Collect's City",
+            "user": self.superuser
+        })
+        self.superuser_schedulecollect.materials.sets = self.superuser_material
 
-        try:
-            for i in range(1,11):
-                self.random_company.append(Company.objects.create(**{
-                    "name": f"Random Company {i}",
-                    "collect_days": i,
-                    "donation": (i % 2 == 0),
-                }))
-                self.random_discard.append(Discard.objects.create(**{
-                    "address": f"Random Company {i} Discard's Address",
-                    "city": f"Random Company {i} Discard's City",
-                    "quantity": i,
-                }))
-                self.random_discard[i-1].companies.sets = self.random_company[i-1]
-                self.random_material.append(Material.objects.create(**{
-                    "name": f"Random Company {i} Material",
-                    "dangerousness": False,
-                    "category": Recomendation.RECICLAVEL,
-                    "infos": f"Random Company {i} Material's info",
-                    "decomposition": i
-                }))
-                self.random_company[i-1].materials.sets = self.random_material[i-1]
-                self.random_infocompany.append(InfoCompany.objects.create(**{
-                    "telephone": 12345678,
-                    "email": f"randomcompany{i}@email.com",
-                    "address": f"Random Company {i} InfoCompany's Address",
-                    "company": self.random_company[i-1]
-                }))
-                self.random_infocollect.append(InfoCollect.objects.create(**{
-                    "cep": 10000000,
-                    "address": f"Random Company {i} InfoCollect's Address",
-                    "reference_point": f"Random Company {i} InfoCollect's Address",
-                    "company": self.random_company[i-1]
-                }))
-                self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
-        except Exception as e:
-            print(e)
+
+        self.default_company = Company.objects.create(**{
+            "name": "Default Company's Name",
+            "collect_days": 5,
+            "donation": True,
+            "owner_id": self.person
+        })
+        self.default_discard = Discard.objects.create(**{
+            "address": "Default Discard's Address",
+            "city": "Default Discard's City",
+            "quantity": 5,
+        })
+        self.default_discard.companies.sets = self.default_company
+        self.default_material = Material.objects.create(**{
+            "name": "Default Material's Name",
+            "dangerousness": False,
+            "category": Recomendation.RECICLAVEL,
+            "infos": "Default Material's Infos",
+            "decomposition": 3
+        })
+        self.default_company.materials.sets = self.default_material
+        self.default_infocompany = InfoCompany.objects.create(**{
+            "telephone": 12345678,
+            "email": "default@infocompany.com",
+            "address": "Default InfoCompany's Address",
+            "company": self.default_company
+        })
+        self.default_infocollect = InfoCollect.objects.create(**{
+            "cep": 20000000,
+            "address": "Default InfoCollect's Address",
+            "reference_point": "Default InfoCollect's Reference Point",
+            "company": self.default_company
+        })
+        self.default_infocollect.materials.sets = self.default_material
+        self.default_infocollect.user_id.sets = self.company
+        self.default_accumulationpoint = AccumulationPoint.objects.create(**{
+            "address": "Default Accumulation Point's Address"
+        })
+        self.default_accumulationpoint.materials.sets = self.default_material
+        self.default_schedulecollect = ScheduleCollect.objects.create(**{
+            "days": 3,
+            "scheduling": make_aware(datetime.now()),
+            "city": "Default Schedule Collect's City",
+            "user": self.company
+        })
+        self.default_schedulecollect.materials.sets = self.default_material
+
+        
+        # self.random_company = []
+        # self.random_discard = []
+        # self.random_material = []
+        # self.random_infocompany = []
+        # self.random_infocollect = []
+
+        # try:
+        #     for i in range(1,11):
+        #         self.random_company.append(Company.objects.create(**{
+        #             "name": f"Random Company {i}",
+        #             "collect_days": i,
+        #             "donation": (i % 2 == 0),
+        #         }))
+        #         self.random_discard.append(Discard.objects.create(**{
+        #             "address": f"Random Company {i} Discard's Address",
+        #             "city": f"Random Company {i} Discard's City",
+        #             "quantity": i,
+        #         }))
+        #         self.random_discard[i-1].companies.sets = self.random_company[i-1]
+        #         self.random_material.append(Material.objects.create(**{
+        #             "name": f"Random Company {i} Material",
+        #             "dangerousness": False,
+        #             "category": Recomendation.RECICLAVEL,
+        #             "infos": f"Random Company {i} Material's info",
+        #             "decomposition": i
+        #         }))
+        #         self.random_company[i-1].materials.sets = self.random_material[i-1]
+        #         self.random_infocompany.append(InfoCompany.objects.create(**{
+        #             "telephone": 12345678,
+        #             "email": f"randomcompany{i}@email.com",
+        #             "address": f"Random Company {i} InfoCompany's Address",
+        #             "company": self.random_company[i-1]
+        #         }))
+        #         self.random_infocollect.append(InfoCollect.objects.create(**{
+        #             "cep": 10000000,
+        #             "address": f"Random Company {i} InfoCollect's Address",
+        #             "reference_point": f"Random Company {i} InfoCollect's Address",
+        #             "company": self.random_company[i-1]
+        #         }))
+        #         self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
+        # except Exception as e:
+        #     print(e)
 
     # PATH /api/companies/
 
-    def superuser_get_company(self):
+    def superuser_get_companies(self):
         
         route = "/api/companies/"
         valid_status_code = status.HTTP_200_OK
@@ -131,7 +230,7 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
-    def person_get_company(self):
+    def person_get_companies(self):
         
         route = "/api/companies/"
         valid_status_code = status.HTTP_200_OK
@@ -154,7 +253,7 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (person credentials); response is not list: {content}")
 
 
-    def company_get_company(self):
+    def company_get_companies(self):
         
         route = "/api/companies/"
         valid_status_code = status.HTTP_200_OK
@@ -177,6 +276,37 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (company credentials); response is not list: {content}")
 
 
+    def anonymous_get_companies(self):
+        
+        route = "/api/companies/"
+        valid_status_code = status.HTTP_200_OK
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+        self.assertIsInstance(content["results"], list,
+            msg=f"2) GET {route} error (company credentials); response is not list: {content}")
+
+
+    def invalid_get_companies(self):
+        
+        route = "/api/companies/"
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+        
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer INVALID' 
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+
+
     def superuser_post_company(self):
         
         route = "/api/companies/"
@@ -189,7 +319,7 @@ class CompanyViewTestCase(TestCase):
         ).json()['access']
         
         body = {
-        "name": "Superuser's Company",
+        "name": "New Superuser's Company",
         "collect_days": 5,
         "donation": True,
         "materials": []
@@ -205,14 +335,17 @@ class CompanyViewTestCase(TestCase):
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) POST {route} error (superuser credentials): {content}")
         for key in ["id", "name", "collect_days", "donation", "materials"]:
-                self.assertTrue(key in content, 
+            self.assertTrue(key in content, 
                 msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
+        for key in ["owner_id"]:
+            self.assertFalse(key in content, 
+                msg=f"2) POST {route} error (superuser credentials): Key '{key}' in response: {content}")   
                 
 
     def person_post_company(self):
         
         route = "/api/companies/"
-        valid_status_code = status.HTTP_201_CREATED
+        valid_status_code = status.HTTP_403_FORBIDDEN
         
         token = self.client.post(
             '/api/login/',
@@ -221,7 +354,7 @@ class CompanyViewTestCase(TestCase):
         ).json()['access']
         
         body = {
-        "name": "Person's Company",
+        "name": "New Person's Company",
         "collect_days": 5,
         "donation": True,
         "materials": []
@@ -236,9 +369,6 @@ class CompanyViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) POST {route} error (person credentials): {content}")
-        for key in ["id", "name", "collect_days", "donation", "materials"]:
-                self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
                 
 
     def company_post_company(self):
@@ -273,6 +403,51 @@ class CompanyViewTestCase(TestCase):
                 msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
 
 
+    def anonymous_post_company(self):
+        
+        route = "/api/companies/"
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+        
+        body = {
+        "name": "Anonymous's Company",
+        "collect_days": 5,
+        "donation": True,
+        "materials": []
+        }
+        response = self.client.post(
+            route,
+            body,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) POST {route} error (anonymous): {content}")
+
+
+    def invalid_post_company(self):
+        
+        route = "/api/companies/"
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+        
+        body = {
+        "name": "Invalid Company",
+        "collect_days": 5,
+        "donation": True,
+        "materials": []
+        }
+        response = self.client.post(
+            route,
+            body,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer INVALID'
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) POST {route} error (invalid credentials): {content}")
+
+
     def superuser_post_duplicate_company(self):
         
         route = "/api/companies/"
@@ -285,7 +460,7 @@ class CompanyViewTestCase(TestCase):
         ).json()['access']
         
         body = {
-        "name": "Company",
+        "name": self.superuser_company.name,
         "collect_days": 5,
         "donation": True,
         "materials": []
@@ -332,10 +507,10 @@ class CompanyViewTestCase(TestCase):
 
     # PATH /api/companies/<int:id>/
     
-    def superuser_get_company_id(self):
+    def superuser_get_own_companyid(self):
             
         valid_status_code = status.HTTP_200_OK
-        route = f"/api/companies/{self.random_company[random.randint(0, 9)].id}/" 
+        route = f"/api/companies/{self.superuser_company.id}/" 
         
         token = self.client.post(
             '/api/login/',
@@ -355,6 +530,57 @@ class CompanyViewTestCase(TestCase):
             self.assertTrue(key in content, 
             msg=f"2) GET {route} error (superuser credentials): Key '{key}' not in response; {content}")   
     
+
+    def superuser_get_others_companyid(self):
+            
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/companies/{self.default_company.id}/" 
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (superuser credentials): {content}")
+        for key in ["id", "name", "collect_days", "donation", "materials"]:
+            self.assertTrue(key in content, 
+            msg=f"2) GET {route} error (superuser credentials): Key '{key}' not in response; {content}")   
+    
+
+    
+    def company_get_own_companyid(self):
+            
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/companies/{self.default_company.id}/" 
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (company credentials): {content}")
+        for key in ["id", "name", "collect_days", "donation", "materials"]:
+            self.assertTrue(key in content, 
+            msg=f"2) GET {route} error (company credentials): Key '{key}' not in response; {content}")   
+    
+
+
 
     def superuser_patch_company_id(self):
             

@@ -1,16 +1,28 @@
 from companies.models import Company
 from django.db import models
 from django.test import TestCase
+from users.models import User
 
 
 class CompanyModelTestCase(TestCase):
     
     def setUp(self):
         
+        self.superuser = User.objects.create_superuser(**{
+                "username": "superuser",
+                "first_name": "Super",
+                "last_name": "User",
+                "city": "Superuser's City",
+                "email": "superuser@kenzie.com",
+                "is_company": False,
+                "password": "SuperUserPassword123@",
+        })
+
         self.company_data = {
             "name": "Company",
             "collect_days": 5,
             "donation": True,
+            "owner_id": self.superuser
         }
         
         self.company = Company.objects.create(**self.company_data)
@@ -48,7 +60,11 @@ class CompanyModelTestCase(TestCase):
                 "parameters": {
                 }
             },
-            
+            "owner_id": {
+                "instance": models.ForeignKey,
+                "parameters": {
+                }
+            },
         }
         
         company = Company.objects.get(name="Company")
