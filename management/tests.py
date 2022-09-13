@@ -21,11 +21,35 @@ class TestA1(UserModelTestCase):
         """USER MODEL: Check user type"""
         self.user_type()
  
-# class TestA2(UserViewTestCase):
+class TestA2(UserViewTestCase):
     
-#     def test_03(self):
-#         """USER VIEW: Check POST /api/login/ (user login and response tokens)"""
-#         self.user_login("3")
+     def test_A201(self):
+         """USER VIEW: POST /api/login/ (superuser credentials)"""
+         self.superuser_login()
+
+     def test_A202(self):
+         """USER VIEW: POST /api/login/ (person credentials)"""
+         self.person_login()
+
+     def test_A203(self):
+         """USER VIEW: POST /api/login/ (company credentials)"""
+         self.company_login()
+
+     def test_A204(self):
+         """USER VIEW: POST /api/register/ (new person)"""
+         self.newperson_register()
+
+     def test_A205(self):
+         """USER VIEW: GET /api/users/ (superuser credentials)"""
+         self.superuser_get_users()
+
+     def test_A206(self):
+         """USER VIEW: GET /api/users/ (person credentials)"""
+         self.person_get_users()
+
+     def test_A207(self):
+         """USER VIEW: GET /api/users/ (company credentials)"""
+         self.company_get_users()
 
 #     def test_04(self):
 #         """USER VIEW: Check POST /api/register/ (random users)"""

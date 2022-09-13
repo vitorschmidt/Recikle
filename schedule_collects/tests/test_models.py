@@ -61,7 +61,7 @@ class ScheduleCollectModelTestCase(TestCase):
             "city": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 128
+                    "max_length": 120
                 }
             },
             "user": {

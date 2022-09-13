@@ -96,7 +96,7 @@ class ScheduleCollectViewTestCase(TestCase):
                     "company": self.random_company[i-1]
                 }))
                 self.random_infocollect.append(InfoCollect.objects.create(**{
-                    "cep": 10000000,
+                    "cep": 10000000+i,
                     "address": f"Random Company {i} InfoCollect's Address",
                     "reference_point": f"Random Company {i} InfoCollect's Address",
                     "company": self.random_company[i-1]
@@ -104,14 +104,14 @@ class ScheduleCollectViewTestCase(TestCase):
                 self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
                 self.random_infocollect[i-1].user_id.sets = self.superuser
                 self.random_accumulationpoint.append(AccumulationPoint.objects.create(**{
-                    "address": "Random Company {i} Accumulation Point's Address"
+                    "address": f"Random Company {i} Accumulation Point's Address"
                 }))
                 self.random_accumulationpoint[i-1].materials.sets = self.random_material[i-1]
                 self.random_schedulecollect.append(ScheduleCollect.objects.create(**{
                     "days": 5,
                     "scheduling": make_aware(datetime.now()),
-                    "city": "Random Company {i} Schedule Collect' Address",
-                    "user": self.user
+                    "city": f"Random Company {i} Schedule Collect' Address",
+                    "user": self.superuser
                 }))
                 self.random_schedulecollect[i-1].materials.sets = self.random_material[i-1]
 
@@ -168,6 +168,5 @@ class ScheduleCollectViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        for key in ["id", "name", "dangerousness", "category", "infos", "decomposition", "companies"]:
-            self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
+        self.assertIsInstance(content["results"], list,
+            msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")

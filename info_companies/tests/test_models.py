@@ -49,7 +49,7 @@ class InfoCompanyModelTestCase(TestCase):
             "address": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 100
+                    "max_length": 150
                 }
             },
             "company": {

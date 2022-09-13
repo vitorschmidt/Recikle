@@ -49,7 +49,7 @@ class InfoCollectModelTestCase(TestCase):
             "address": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 120
+                    "max_length": 150
                 }
             },
             "reference_point": {

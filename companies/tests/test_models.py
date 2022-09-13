@@ -29,7 +29,7 @@ class CompanyModelTestCase(TestCase):
             "name": {
                 "instance": models.CharField,
                 "parameters": {
-                    "max_length": 50
+                    "max_length": 120
                 }
             },
             "collect_days": {
