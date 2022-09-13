@@ -7,5 +7,5 @@ class Company(models.Model):
     donation = models.BooleanField(default=False)
     materials = models.ManyToManyField("materials.Material", related_name="companies")
     owner_id = models.ForeignKey(
-        "users.User", related_name="company", on_delete=models.CASCADE, default=1
+        "users.User", related_name="company", on_delete=models.CASCADE
     )
