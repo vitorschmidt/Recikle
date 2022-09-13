@@ -15,7 +15,9 @@ def get_object_by_id(model, **kwargs):
 
 
 class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly, IsCompanyOwnerOrAdmin]
+    permission_classes = [IsCompanyOwnerOrAdmin]
+
+    
 
     queryset = Discard.objects.all()
     serializer_map = {
@@ -44,6 +46,8 @@ class DiscardCompanyView(SerializerByMethodMixin, generics.ListCreateAPIView):
 class DiscardDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = [IsAuthenticated, IsCompanyOwnerOrAdmin]
+
+    # a
 
     serializer_class = ListDiscardSerializer
     queryset = Discard.objects.all()
