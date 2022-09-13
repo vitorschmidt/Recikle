@@ -17,7 +17,7 @@ class CompanyModelTestCase(TestCase):
 
     # Company Model Attributes
 
-    def company_model_attributes(self, order):
+    def company_model_attributes(self):
         
         company_model = {
             "id": {
@@ -54,15 +54,15 @@ class CompanyModelTestCase(TestCase):
         company = Company.objects.get(name="Company")
         for field in company_model:
             self.assertIsInstance(company._meta.get_field(field), company_model[field]["instance"],
-                msg=f"{order}.1) Company's {field} field type error")
+                msg=f"1) Company's {field} field type error")
             for parameter in company_model[field]["parameters"]:
                 self.assertEquals(getattr(company._meta.get_field(field), parameter), company_model[field]["parameters"][parameter],
-                    msg=f"{order}.2) Company's {field} field {parameter} error")
+                    msg=f"2) Company's {field} field {parameter} error")
 
-    def company_field_contents(self, order):
+    def company_field_contents(self):
         company = Company.objects.get(name="Company")
         for field in self.company_data:
             self.assertEquals(getattr(company, field), self.company_data[field],
-                msg=f"{order}.2) Company's {field} content error")
+                msg=f"2) Company's {field} content error")
            
 

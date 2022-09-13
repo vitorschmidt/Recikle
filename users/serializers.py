@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
+from schedule_collects.models import ScheduleCollect
+from schedule_collects.serializers import ScheduleSerializer
 
 from users.models import User
+
 
 class UniqueValidationError(APIException):
     status_code = 422
@@ -9,10 +12,21 @@ class UniqueValidationError(APIException):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    
+
     class Meta:
         model = User
-        fields = ["id", "username", "password", "email","first_name", "city","last_name", "is_company", "date_joined", "is_active"]
+        fields = [
+            "id",
+            "username",
+            "password",
+            "email",
+            "first_name",
+            "city",
+            "last_name",
+            "is_company",
+            "date_joined",
+            "is_active",
+        ]
         read_only_fields = ["id"]
 
     def validate_username(self, value: int):
@@ -30,11 +44,24 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         account = User.objects.create_user(**validated_data)
 
-        return account    
+        return account
+
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = "__all__"
-        read_only_fields = ["id", "password", "username", "first_name", "last_name", "is_company"]       
+        read_only_fields = [
+            "id",
+            "password",
+            "username",
+            "first_name",
+            "last_name",
+            "is_company",
+        ]
+
+
+class UserScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleCollect
+        fields = ["id", "days", "scheduling", "city", "materials"]

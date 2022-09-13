@@ -3,9 +3,11 @@ from companies.tests import CompanyModelTestCase, CompanyViewTestCase
 from discards.tests import DiscardModelTestCase
 from django.test import TestCase
 from info_collects.tests import InfoCollectModelTestCase
-from info_companies.tests import InfoCompanyModelTestCase
-from materials.tests import MaterialModelTestCase
-from schedule_collects.tests import ScheduleCollectModelTestCase
+from info_companies.tests import (InfoCompanyModelTestCase,
+                                  InfoCompanyViewTestCase)
+from materials.tests import MaterialModelTestCase, MaterialViewTestCase
+from schedule_collects.tests import (ScheduleCollectModelTestCase,
+                                     ScheduleCollectViewTestCase)
 from users.tests import UserModelTestCase, UserViewTestCase
 
 
@@ -13,11 +15,11 @@ class TestA1(UserModelTestCase):
     
     def test_A101(self):
         """USER MODEL: Check user model attributes"""
-        self.user_model_attributes("A101")
+        self.user_model_attributes()
 
     def test_A102(self):
         """USER MODEL: Check user type"""
-        self.user_type("A102")
+        self.user_type()
  
 # class TestA2(UserViewTestCase):
     
@@ -46,90 +48,249 @@ class TestB1(CompanyModelTestCase):
     
     def test_B101(self):
         """COMPANY MODEL: Check company model attributes"""
-        self.company_model_attributes("B101")
+        self.company_model_attributes()
 
     def test_B102(self):
         """COMPANY MODEL: Check company instance contents"""
-        self.company_field_contents("B102")
+        self.company_field_contents()
+
+class TestB2(CompanyViewTestCase):
+    
+    def test_B201(self):
+        """COMPANY VIEW: GET /api/company/ (superuser credentials)"""
+        self.superuser_get_company()
+
+    def test_B202(self):
+        """COMPANY VIEW: GET /api/company/ (person credentials)"""
+        self.person_get_company()
+
+    def test_B203(self):
+        """COMPANY VIEW: GET /api/company/ (company credentials)"""
+        self.company_get_company()
+
+    def test_B204(self):
+        """COMPANY VIEW: POST /api/company/ (superuser credentials)"""
+        self.superuser_post_company()
+
+    def test_B205(self):
+        """COMPANY VIEW: POST /api/company/ (person credentials)"""
+        self.person_post_company()
+
+    def test_B206(self):
+        """COMPANY VIEW: POST /api/company/ (company credentials)"""
+        self.company_post_company()
+
+    def test_B207(self):
+        """COMPANY VIEW: POST /api/company/ duplicate (superuser credentials)"""
+        self.superuser_post_duplicate_company()
+
+    def test_B208(self):
+        """COMPANY VIEW: POST /api/company/ invalid body (superuser credentials)"""
+        self.superuser_post_invalid_company()
+
+    def test_B209(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/ (superuser credentials)"""
+        self.superuser_get_company_id()
+
+    def test_B210(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id>/ (superuser credentials)"""
+        self.superuser_patch_company_id()
+
+    def test_B211(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id>/ duplicate (superuser credentials)"""
+        self.superuser_patch_duplicate_company_id()
+
+    def test_B212(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/discards/ (superuser credentials)"""
+        self.superuser_get_company_discards()
+
+    def test_B213(self):
+        """COMPANY VIEW: POST /api/company/<int:id>/discards/ (superuser credentials)"""
+        self.superuser_post_company_discard()
+
+    def test_B214(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id>/discards/<int:discard_id>/ (superuser credentials)"""
+        self.superuser_patch_company_discard_id()
+
+    def test_B215(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/materials/ (superuser credentials)"""
+        self.superuser_get_company_materials()
+
+    def test_B216(self):
+        """COMPANY VIEW: POST /api/company/<int:id>/materials/ (superuser credentials)"""
+        self.superuser_post_company_material()
+
+    def test_B217(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
+        self.superuser_get_company_material_id()
+
+    def test_B218(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
+        self.superuser_patch_company_material_id()
+
+    def test_B219(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/info_collection/ (superuser credentials)"""
+        self.superuser_get_company_infocollection()
+
+    def test_B220(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/info_company/ (superuser credentials)"""
+        self.superuser_get_company_infocompany()
 
 
 class TestC1(InfoCompanyModelTestCase):
     
     def test_C101(self):
         """INFOCOMPANY MODEL: Check info_company model attributes"""
-        self.info_company_model_attributes("C101")
+        self.info_company_model_attributes()
 
     def test_C102(self):
         """INFOCOMPANY MODEL: Check info_company instance contents"""
-        self.info_company_field_contents("C102")
+        self.info_company_field_contents()
 
 
-
-# class TestB2(CompanyViewTestCase):
+class TestC2(InfoCompanyViewTestCase):
     
-#     def test_10(self):
-#         """COMPANY VIEW: Check company creation"""
-#         self.post_company("10")
+    def test_C201(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (superuser credentials)"""
+        self.superuser_get_infocompany()
 
-#     def test_11(self):
-#         """COMPANY VIEW: Check company retrieval"""
-#         self.get_company("11")
+    def test_C202(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (person credentials)"""
+        self.person_get_infocompany()
 
-#     def test_12(self):
-#         """COMPANY VIEW: Check detailed company retrieval"""
-#         self.get_company("12")
+    def test_C203(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/ (company credentials)"""
+        self.company_get_infocompany()
+
+    def test_C204(self):
+        """INFOCOMPANY VIEW: POST /api/info_company/ (superuser credentials)"""
+        self.superuser_post_infocompany()
+
+    def test_C205(self):
+        """INFOCOMPANY VIEW: GET /api/info_company/<int:id>/ (superuser credentials)"""
+        self.superuser_get_infocompany_id()
+
+    def test_C206(self):
+        """INFOCOMPANY VIEW: PATCH /api/info_company/<int:id>/ (superuser credentials)"""
+        self.superuser_patch_infocompany_id()
+
+    def test_C207(self):
+        """INFOCOMPANY VIEW: PATCH /api/info_company/<int:id>/ invalid body (superuser credentials)"""
+        self.superuser_patch_invalid_body_infocompany_id()
 
 
 class TestD1(MaterialModelTestCase):
     
     def test_D101(self):
         """MATERIAL MODEL: Check material model attributes"""
-        self.material_model_attributes("D101")
+        self.material_model_attributes()
 
     def test_D102(self):
         """MATERIAL MODEL: Check material instance contents"""
-        self.material_field_contents("D102")
+        self.material_field_contents()
 
+
+class TestD2(MaterialViewTestCase):
+    
+    def test_D201(self):
+        """MATERIAL VIEW: GET /api/materials/ (superuser credentials)"""
+        self.superuser_get_materials()
+
+    def test_D202(self):
+        """MATERIAL VIEW: POST /api/materials/ (superuser credentials)"""
+        self.superuser_post_material()
+
+    def test_D203(self):
+        """MATERIAL VIEW: GET /api/materials/<int:id>/ (superuser credentials)"""
+        self.superuser_get_materials_id()
+
+    def test_D204(self):
+        """MATERIAL VIEW: PATCH /api/materials/<int:id>/ (superuser credentials)"""
+        self.superuser_patch_material_id()
+
+    def test_D205(self):
+        """MATERIAL VIEW: GET /api/materials/<int:id>/accumulation_point/ (superuser credentials)"""
+        self.superuser_get_material_accumulationpoint()
+
+    def test_D206(self):
+        """MATERIAL VIEW: POST /api/materials/<int:id>accumulation_point/ (superuser credentials)"""
+        self.superuser_post_material_accumulationpoint()
+
+    def test_D207(self):
+        """MATERIAL VIEW: GET /api/materials/<int:id>/accumulation_point/<int:accumulation_point_id>/ (superuser credentials)"""
+        self.superuser_get_material_accumulationpoint_id()
+
+    def test_D208(self):
+        """MATERIAL VIEW: PATCH /api/materials/<int:id>/accumulation_point/<int:accumulation_point_id>/ (superuser credentials)"""
+        self.superuser_patch_material_accumulationpoint_id()
+
+    def test_D209(self):
+        """MATERIAL VIEW: GET /api/materials/<int:id>/info_collection/ (superuser credentials)"""
+        self.superuser_get_material_infocollection()
+
+    def test_D210(self):
+        """MATERIAL VIEW: POST /api/materials/<int:id>/info_collection/ (superuser credentials)"""
+        self.superuser_post_material_infocollection()
+
+    def test_D211(self):
+        """MATERIAL VIEW: GET /api/materials/<int:id>/info_collection/<int:info_id>/ (superuser credentials)"""
+        self.superuser_get_material_infocollection_id()
+
+    def test_D212(self):
+        """MATERIAL VIEW: PATCH /api/materials/<int:id>/info_collection/<int:info_id>/ (superuser credentials)"""
+        self.superuser_patch_material_infocollection_id()
 
 class TestE1(AccumulationPointModelTestCase):
     
     def test_E101(self):
         """ACCUMULATION_POINT MODEL: Check accumulation_point model attributes"""
-        self.accumulation_point_model_attributes("E101")
+        self.accumulation_point_model_attributes()
 
     def test_E102(self):
         """ACCUMULATION_POINT MODEL: Check accumulation_point instance contents"""
-        self.accumulation_point_field_contents("E102")
+        self.accumulation_point_field_contents()
+
 
 class TestF1(InfoCollectModelTestCase):
     
     def test_F101(self):
         """INFO_COLLECT MODEL: Check info_collect model attributes"""
-        self.info_collect_model_attributes("F101")
+        self.info_collect_model_attributes()
 
     def test_F102(self):
         """INFO_COLLECT MODEL: Check info_collect instance contents"""
-        self.info_collect_field_contents("F102")
+        self.info_collect_field_contents()
 
 
 class TestG1(ScheduleCollectModelTestCase):
     
     def test_G101(self):
         """SCHEDULE_COLLECT MODEL: Check schedule_collect model attributes"""
-        self.schedule_collect_model_attributes("G101")
+        self.schedule_collect_model_attributes()
 
     def test_G102(self):
         """SCHEDULE_COLLECT MODEL: Check schedule_collect instance contents"""
-        self.schedule_collect_field_contents("G102")
+        self.schedule_collect_field_contents()
+
+
+class TestG2(ScheduleCollectViewTestCase):
+    
+    def test_G201(self):
+        """SCHEDULE_COLLECT VIEW: GET /api/schedules/ (superuser credentials)"""
+        self.superuser_get_schedules()
+
+    def test_G202(self):
+        """SCHEDULE_COLLECT VIEW: GET /api/schedules/<int:id>/ (superuser credentials)"""
+        self.superuser_get_schedules_id()
 
 
 class TestH1(DiscardModelTestCase):
     
     def test_H101(self):
         """DISCARD MODEL: Check discard model attributes"""
-        self.discard_model_attributes("H101")
+        self.discard_model_attributes()
 
     def test_H102(self):
         """DISCARD MODEL: Check discard instance contents"""
-        self.discard_field_contents("H102")
+        self.discard_field_contents()
 

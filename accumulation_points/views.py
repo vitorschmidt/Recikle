@@ -1,18 +1,30 @@
-from rest_framework import generics
+from companies.permissions import IsCompanyOrAdmin
 from django.shortcuts import get_object_or_404
-from accumulation_points.mixins import SerializerByMethodMixin
-from accumulation_points.serializers import AccumulationPointSerializer, ListAccumulationPointSerializer
-from accumulation_points.models import AccumulationPoint
 from materials.models import Material
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+from accumulation_points.mixins import SerializerByMethodMixin
+from accumulation_points.models import AccumulationPoint
+from accumulation_points.serializers import (
+    AccumulationPointSerializer,
+    ListAccumulationPointSerializer,
+)
 
 
 def get_object_by_id(model, **kwargs):
     object = get_object_or_404(model, **kwargs)
     return object
 
-class AccumulationPointView(SerializerByMethodMixin,generics.ListCreateAPIView):
+
+class AccumulationPointView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsCompanyOrAdmin]
+
     queryset = AccumulationPoint.objects.all()
-    serializer_map = {"GET":ListAccumulationPointSerializer, "POST":  AccumulationPointSerializer}
+    serializer_map = {
+        "GET": ListAccumulationPointSerializer,
+        "POST": AccumulationPointSerializer,
+    }
 
     lookup_url_kwarg = "id"
 
@@ -29,8 +41,11 @@ class AccumulationPointView(SerializerByMethodMixin,generics.ListCreateAPIView):
 
         serializer.save(materials=material)
 
+
 class AccumulationPointDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsCompanyOrAdmin]
+
     serializer_class = AccumulationPointSerializer
     queryset = AccumulationPoint.objects.all()
 
-    lookup_url_kwarg="accumulation_point_id"
+    lookup_url_kwarg = "accumulation_point_id"
