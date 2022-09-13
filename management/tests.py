@@ -123,103 +123,129 @@ from users.tests import UserModelTestCase, UserViewTestCase
 
 class TestB2(CompanyViewTestCase):
     
-    def test_B201(self):
-        """COMPANY VIEW: GET /api/companies/ (superuser credentials)"""
-        print(self.superuser_company.materials)
-        self.superuser_get_companies()
+    # def test_B201(self):
+    #     """COMPANY VIEW: GET /api/companies/ (superuser credentials)"""
+    #     self.superuser_get_companies()
 
-    def test_B202(self):
-        """COMPANY VIEW: GET /api/companies/ (person credentials)"""
-        self.person_get_companies()
+    # def test_B202(self):
+    #     """COMPANY VIEW: GET /api/companies/ (person credentials)"""
+    #     self.person_get_companies()
 
-    def test_B203(self):
-        """COMPANY VIEW: GET /api/companies/ (company credentials)"""
-        self.company_get_companies()
+    # def test_B203(self):
+    #     """COMPANY VIEW: GET /api/companies/ (company credentials)"""
+    #     self.company_get_companies()
 
-    def test_B204(self):
-        """COMPANY VIEW: GET /api/companies/ (anonymous)"""
-        self.anonymous_get_companies()
+    # def test_B204(self):
+    #     """COMPANY VIEW: GET /api/companies/ (anonymous)"""
+    #     self.anonymous_get_companies()
 
-    def test_B205(self):
-        """COMPANY VIEW: GET /api/companies/ (invalid credentials)"""
-        self.invalid_get_companies()
+    # def test_B205(self):
+    #     """COMPANY VIEW: GET /api/companies/ (invalid credentials)"""
+    #     self.invalid_get_companies()
 
-    def test_B206(self):
-        """COMPANY VIEW: POST /api/companies/ (superuser credentials)"""
-        self.superuser_post_company()
+    # def test_B206(self):
+    #     """COMPANY VIEW: POST /api/companies/ (superuser credentials)"""
+    #     self.superuser_post_company()
 
-    def test_B207(self):
-        """COMPANY VIEW: POST /api/companies/ (person credentials)"""
-        self.person_post_company()
+    # def test_B207(self):
+    #     """COMPANY VIEW: POST /api/companies/ (person credentials)"""
+    #     self.person_post_company()
 
-    def test_B208(self):
-        """COMPANY VIEW: POST /api/companies/ (company credentials)"""
-        self.company_post_company()
+    # def test_B208(self):
+    #     """COMPANY VIEW: POST /api/companies/ (company credentials)"""
+    #     self.company_post_company()
 
-    def test_B209(self):
-        """COMPANY VIEW: POST /api/companies/ (anonymous)"""
-        self.anonymous_post_company()
+    # def test_B209(self):
+    #     """COMPANY VIEW: POST /api/companies/ (anonymous)"""
+    #     self.anonymous_post_company()
 
-    def test_B210(self):
-        """COMPANY VIEW: POST /api/companies/ (invalid credentials)"""
-        self.invalid_post_company()
+    # def test_B210(self):
+    #     """COMPANY VIEW: POST /api/companies/ (invalid credentials)"""
+    #     self.invalid_post_company()
 
-    def test_B211(self):
-        """COMPANY VIEW: POST /api/company/ duplicate data (superuser credentials)"""
-        self.superuser_post_duplicate_company()
+    # def test_B211(self):
+    #     """COMPANY VIEW: POST /api/company/ duplicate data (superuser credentials)"""
+    #     self.superuser_post_duplicate_company()
 
-    def test_B212(self):
-        """COMPANY VIEW: POST /api/company/ invalid data (superuser credentials)"""
-        self.superuser_post_invalid_company()
+    # def test_B212(self):
+    #     """COMPANY VIEW: POST /api/company/ invalid data (superuser credentials)"""
+    #     self.superuser_post_invalid_company()
 
-    def test_B213(self):
-        """COMPANY VIEW: GET /api/company/<int:id>/ own company (superuser credentials)"""
-        self.superuser_get_own_companyid()
+    # def test_B213(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ own company (superuser credentials)"""
+    #     self.superuser_get_own_companyid()
 
-    def test_B214(self):
-        """COMPANY VIEW: GET /api/company/<int:id>/ other's company (superuser credentials)"""
-        self.superuser_get_others_companyid()
+    # def test_B214(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ other's company (superuser credentials)"""
+    #     self.superuser_get_others_companyid()
+
+    # def test_B215(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ company's own company (company credentials)"""
+    #     self.company_get_own_companyid()
+
+    # def test_B216(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ (person credentials)"""
+    #     self.person_get_companyid()
+
+    # def test_B217(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ (anonymous)"""
+    #     self.anonymous_get_companyid()
+
+    # def test_B217(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/ (invalid credentials)"""
+    #     self.invalid_get_companyid()
+
+    # def test_B218(self):
+    #     """COMPANY VIEW: PATCH /api/company/<int:id>/ (superuser credentials)"""
+    #     self.superuser_patch_company_id()
+
+    # def test_B219(self):
+    #     """COMPANY VIEW: PATCH /api/company/<int:id>/ duplicate (superuser credentials)"""
+    #     self.superuser_patch_duplicate_company_id()
+
+    # def test_B220(self):
+    #     """COMPANY VIEW: PATCH /api/company/<int:id>/ (random user)"""
+    #     self.random_usercompany_patch_company_id()
+
+    # def test_B221(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/discards/ (random company)"""
+    #     self.random_usercompany_get_company_discards()
+        
+    # def test_B222(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/discards/ (superuser credentials)"""
+    #     self.superuser_get_company_discards()
+
+    # def test_B223(self):
+    #     """COMPANY VIEW: POST /api/company/<int:id>/discards/ (superuser credentials)"""
+    #     self.superuser_post_company_discard()
+
+    # def test_B224(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/discards/<int:discard_id>/ (superuser credentials)"""
+    #     self.superuser_get_company_discard_id()
+
+    # def test_B225(self):
+    #     """COMPANY VIEW: GET /api/company/<int:id>/discards/<int:discard_id>/ (random company)"""
+    #     self.random_usercompany_get_company_discard_id()
+
+    # def test_B226(self):
+    #     """COMPANY VIEW: PATCH /api/company/<int:id>/discards/<int:discard_id>/ (superuser credentials)"""
+    #     self.superuser_patch_company_discard_id()
 
     def test_B215(self):
-        """COMPANY VIEW: GET /api/company/<int:id>/ company's own company (company credentials)"""
-        self.company_get_own_companyid()
+        """COMPANY VIEW: GET /api/company/<int:id>/materials/ (superuser credentials)"""
+        self.superuser_get_company_materials()
 
+    def test_B216(self):
+        """COMPANY VIEW: POST /api/company/<int:id>/materials/ (superuser credentials)"""
+        self.superuser_post_company_material()
 
-#     def test_B210(self):
-#         """COMPANY VIEW: PATCH /api/company/<int:id>/ (superuser credentials)"""
-#         self.superuser_patch_company_id()
+    def test_B217(self):
+        """COMPANY VIEW: GET /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
+        self.superuser_get_company_material_id()
 
-#     def test_B211(self):
-#         """COMPANY VIEW: PATCH /api/company/<int:id>/ duplicate (superuser credentials)"""
-#         self.superuser_patch_duplicate_company_id()
-
-#     def test_B212(self):
-#         """COMPANY VIEW: GET /api/company/<int:id>/discards/ (superuser credentials)"""
-#         self.superuser_get_company_discards()
-
-#     def test_B213(self):
-#         """COMPANY VIEW: POST /api/company/<int:id>/discards/ (superuser credentials)"""
-#         self.superuser_post_company_discard()
-
-#     def test_B214(self):
-#         """COMPANY VIEW: PATCH /api/company/<int:id>/discards/<int:discard_id>/ (superuser credentials)"""
-#         self.superuser_patch_company_discard_id()
-
-#     def test_B215(self):
-#         """COMPANY VIEW: GET /api/company/<int:id>/materials/ (superuser credentials)"""
-#         self.superuser_get_company_materials()
-
-#     def test_B216(self):
-#         """COMPANY VIEW: POST /api/company/<int:id>/materials/ (superuser credentials)"""
-#         self.superuser_post_company_material()
-
-#     def test_B217(self):
-#         """COMPANY VIEW: GET /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
-#         self.superuser_get_company_material_id()
-
-#     def test_B218(self):
-#         """COMPANY VIEW: PATCH /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
-#         self.superuser_patch_company_material_id()
+    def test_B218(self):
+        """COMPANY VIEW: PATCH /api/company/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
+        self.superuser_patch_company_material_id()
 
 #     def test_B219(self):
 #         """COMPANY VIEW: GET /api/company/<int:id>/info_collection/ (superuser credentials)"""

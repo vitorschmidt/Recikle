@@ -119,7 +119,7 @@ class CompanyViewTestCase(TestCase):
             "name": "Default Company's Name",
             "collect_days": 5,
             "donation": True,
-            "owner_id": self.person
+            "owner_id": self.company
         })
         self.default_discard = Discard.objects.create(**{
             "address": "Default Discard's Address",
@@ -161,49 +161,70 @@ class CompanyViewTestCase(TestCase):
         })
         self.default_schedulecollect.materials.sets = self.default_material
 
-        
-        # self.random_company = []
-        # self.random_discard = []
-        # self.random_material = []
-        # self.random_infocompany = []
-        # self.random_infocollect = []
+        self.random_usercompany = []
+        self.random_company = []
+        self.random_discard = []
+        self.random_material = []
+        self.random_infocompany = []
+        self.random_infocollect = []
+        self.random_accumulationpoint = []
+        self.random_schedulecollect = []
 
-        # try:
-        #     for i in range(1,11):
-        #         self.random_company.append(Company.objects.create(**{
-        #             "name": f"Random Company {i}",
-        #             "collect_days": i,
-        #             "donation": (i % 2 == 0),
-        #         }))
-        #         self.random_discard.append(Discard.objects.create(**{
-        #             "address": f"Random Company {i} Discard's Address",
-        #             "city": f"Random Company {i} Discard's City",
-        #             "quantity": i,
-        #         }))
-        #         self.random_discard[i-1].companies.sets = self.random_company[i-1]
-        #         self.random_material.append(Material.objects.create(**{
-        #             "name": f"Random Company {i} Material",
-        #             "dangerousness": False,
-        #             "category": Recomendation.RECICLAVEL,
-        #             "infos": f"Random Company {i} Material's info",
-        #             "decomposition": i
-        #         }))
-        #         self.random_company[i-1].materials.sets = self.random_material[i-1]
-        #         self.random_infocompany.append(InfoCompany.objects.create(**{
-        #             "telephone": 12345678,
-        #             "email": f"randomcompany{i}@email.com",
-        #             "address": f"Random Company {i} InfoCompany's Address",
-        #             "company": self.random_company[i-1]
-        #         }))
-        #         self.random_infocollect.append(InfoCollect.objects.create(**{
-        #             "cep": 10000000,
-        #             "address": f"Random Company {i} InfoCollect's Address",
-        #             "reference_point": f"Random Company {i} InfoCollect's Address",
-        #             "company": self.random_company[i-1]
-        #         }))
-        #         self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
-        # except Exception as e:
-        #     print(e)
+        for i in range(1,11):
+            self.random_usercompany.append(User.objects.create_user(**{
+                "username": f"usercompany{i}",
+                "first_name": f"Company {i}",
+                "last_name": "Kenzie",
+                "city": f"Company {i}'s City",
+                "email": f"usercompany{i}@kenzie.com",
+                "is_company": True,
+                "password": f"UserCompany{i}Password123@",
+            }))
+            self.random_company.append(Company.objects.create(**{
+                "name": f"Random Company {i}",
+                "collect_days": i,
+                "donation": (i % 2 == 0),
+                "owner_id": self.random_usercompany[i-1]
+            }))
+            self.random_discard.append(Discard.objects.create(**{
+                "address": f"Random Company {i} Discard's Address",
+                "city": f"Random Company {i} Discard's City",
+                "quantity": i,
+            }))
+            self.random_discard[i-1].companies.sets = self.random_company[i-1]
+            self.random_material.append(Material.objects.create(**{
+                "name": f"Random Company {i} Material",
+                "dangerousness": False,
+                "category": Recomendation.RECICLAVEL,
+                "infos": f"Random Company {i} Material's info",
+                "decomposition": i
+            }))
+            self.random_company[i-1].materials.sets = self.random_material[i-1]
+            self.random_infocompany.append(InfoCompany.objects.create(**{
+                "telephone": 12345678+i,
+                "email": f"randomcompany{i}@email.com",
+                "address": f"Random Company {i} InfoCompany's Address",
+                "company": self.random_company[i-1]
+            }))
+            self.random_infocollect.append(InfoCollect.objects.create(**{
+                "cep": 10000000+i,
+                "address": f"Random Company {i} InfoCollect's Address",
+                "reference_point": f"Random Company {i} InfoCollect's Reference Point",
+                "company": self.random_company[i-1]
+            }))
+            self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
+            self.random_infocollect[i-1].user_id.sets = self.random_usercompany[i-1]
+            self.random_accumulationpoint.append(AccumulationPoint.objects.create(**{
+                "address": f"Random Company {i} Accumulation Point's Address"
+            }))
+            self.random_accumulationpoint[i-1].materials.sets = self.random_material[i-1]
+            self.random_schedulecollect.append(ScheduleCollect.objects.create(**{
+                "days": 3,
+                "scheduling": make_aware(datetime.now()),
+                "city": f"Random Company {i} Schedule Collect's City",
+                "user": self.random_usercompany[i-1]
+            }))
+            self.random_schedulecollect[i-1].materials.sets = self.random_material[i-1]
 
     # PATH /api/companies/
 
@@ -279,7 +300,7 @@ class CompanyViewTestCase(TestCase):
     def anonymous_get_companies(self):
         
         route = "/api/companies/"
-        valid_status_code = status.HTTP_200_OK
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
 
         response = self.client.get(
             route,
@@ -288,8 +309,6 @@ class CompanyViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (company credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (company credentials); response is not list: {content}")
 
 
     def invalid_get_companies(self):
@@ -322,7 +341,7 @@ class CompanyViewTestCase(TestCase):
         "name": "New Superuser's Company",
         "collect_days": 5,
         "donation": True,
-        "materials": []
+        #"materials": []
         }
         response = self.client.post(
             route,
@@ -554,7 +573,6 @@ class CompanyViewTestCase(TestCase):
             self.assertTrue(key in content, 
             msg=f"2) GET {route} error (superuser credentials): Key '{key}' not in response; {content}")   
     
-
     
     def company_get_own_companyid(self):
             
@@ -580,7 +598,61 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (company credentials): Key '{key}' not in response; {content}")   
     
 
+    def person_get_companyid(self):
+            
+        valid_status_code = status.HTTP_403_FORBIDDEN
+        route = f"/api/companies/{self.default_company.id}/" 
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
 
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+    
+
+    def invalid_get_companyid(self):
+            
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+        route = f"/api/companies/{self.default_company.id}/" 
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer INVALID'
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (invalid credentials): {content}")
+    
+
+    def anonymous_get_companyid(self):
+            
+        valid_status_code = status.HTTP_403_FORBIDDEN
+        route = f"/api/companies/{self.default_company.id}/" 
+        
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (anonymous): {content}")
+        
 
     def superuser_patch_company_id(self):
             
@@ -629,7 +701,7 @@ class CompanyViewTestCase(TestCase):
         ).json()['access']
         
         body = {
-        "name": self.company.name,
+        "name": self.default_company.name,
         "collect_days": 99,
         "donation": True,
         "materials": []
@@ -646,13 +718,50 @@ class CompanyViewTestCase(TestCase):
             msg=f"1) POST {route} duplicate error (superuser credentials): {content}")
         self.assertEquals(content, {'detail': 'name already registered'},
             msg=f"2) POST {route} duplicate error (superuser credentials): {content}")   
+
+
+    def random_usercompany_patch_company_id(self):
+
+        random_id = random.randint(0, 9)
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/companies/{self.random_company[random_id].id}/" 
+                
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+        
+        body = {
+        "name": "PATCH Random Company's Name",
+        "collect_days": 99,
+        "donation": True,
+        }
+        response = self.client.patch(
+            route,
+            body,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) PATCH {route} error (company credentials): {content}")
+        for key in ["name", "collect_days", "donation", "materials"]:
+            self.assertTrue(key in content, 
+                msg=f"2) PATCH {route} error (company credentials): Key '{key}' not in response; {content}")   
+        for key in ["name", "collect_days", "donation"]:
+            self.assertEquals(body[key], content[key], 
+                msg=f"3) PATCH {route} error (company credentials): content doesn't match; {content}")   
+                
                 
 
     # PATH /api/companies/<int:id>/discards/
 
     def superuser_get_company_discards(self):
-        
-        route = f"/api/companies/{self.random_company[random.randint(0, 9)].id}/discards/"
+
+        random_id = random.randint(0, 9)
+        route = f"/api/companies/{self.random_company[random_id].id}/discards/"
         valid_status_code = status.HTTP_200_OK
         
         token = self.client.post(
@@ -673,9 +782,34 @@ class CompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
+    def random_usercompany_get_company_discards(self):
+        
+        random_id = random.randint(0, 9)
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/companies/{self.random_company[random_id].id}/discards/" 
+                
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (superuser credentials): {content}")
+        self.assertIsInstance(content["results"], list,
+            msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
+
+
     def superuser_post_company_discard(self):
         
-        route = f"/api/companies/{self.random_company[random.randint(0, 9)].id}/discards/"
+        random_id = random.randint(0, 9)
+        route = f"/api/companies/{self.random_company[random_id].id}/discards/"
         valid_status_code = status.HTTP_201_CREATED
         
         token = self.client.post(
@@ -685,8 +819,8 @@ class CompanyViewTestCase(TestCase):
         ).json()['access']
 
         body = {
-            "address": "Discard's Address",
-            "city": "Discard's City",
+            "address": "New Discard's Address",
+            "city": "New Discard's City",
             "quantity": 5,
         }
         response = self.client.post(
@@ -767,6 +901,31 @@ class CompanyViewTestCase(TestCase):
                 msg=f"3) PATCH {route} error (superuser credentials): '{key}' field doesn't match; {content}")   
          
 
+    def random_usercompany_get_company_discard_id(self):
+
+        random_id = random.randint(0, 9)
+        route = f"/api/companies/{self.random_company[random_id].id}/discards/{self.random_discard[random_id].id}/"
+        valid_status_code = status.HTTP_200_OK
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (random company): {content}")
+        for key in ["id", "address", "city", "quantity", "companies"]:
+                self.assertTrue(key in content, 
+                msg=f"2) GET {route} error (random company): Key '{key}' not in response; {content}")   
+         
 # PATH /api/companies/<int:id>/materials/
 
     def superuser_get_company_materials(self):

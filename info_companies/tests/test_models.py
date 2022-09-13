@@ -2,19 +2,29 @@ from companies.models import Company
 from django.db import models
 from django.test import TestCase
 from info_companies.models import InfoCompany
+from users.models import User
 
 
 class InfoCompanyModelTestCase(TestCase):
     
     def setUp(self):
+
+        self.superuser = User.objects.create_superuser(**{
+                "username": "superuser",
+                "first_name": "Super",
+                "last_name": "User",
+                "city": "Superuser's City",
+                "email": "superuser@kenzie.com",
+                "is_company": False,
+                "password": "SuperUserPassword123@",
+            })
         
-        self.company_data = {
+        self.company = Company.objects.create(**{
             "name": "Company",
             "collect_days": 5,
             "donation": True,
-        }
-        
-        self.company = Company.objects.create(**self.company_data)
+            "owner_id": self.superuser
+        })
 
         self.info_company_data = {
             "telephone": 12345678,
