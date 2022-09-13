@@ -14,7 +14,7 @@ def get_object_by_id(model, **kwargs):
 
 
 class CompanyView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly, IsCompanyOrAdmin]
+    permission_classes = [IsAuthenticated, IsCompanyOrAdmin]
 
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
