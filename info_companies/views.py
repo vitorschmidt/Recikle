@@ -1,18 +1,22 @@
 from companies.models import Company
 from companies.serializers import InfoCompanyListSerializer
-
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from info_companies.models import InfoCompany
+from info_companies.permissions import IsOnlyCompanyOwner
 from info_companies.serializers import InfoCompanySerializer
 
 
 class InfoCompanyView(generics.ListCreateAPIView):
+    permission_classes = [IsOnlyCompanyOwner]
+
     queryset = InfoCompany.objects.all()
     serializer_class = InfoCompanySerializer
 
 
 class InfoCompanyDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOnlyCompanyOwner]
     queryset = InfoCompany.objects.all()
     serializer_class = InfoCompanySerializer
 

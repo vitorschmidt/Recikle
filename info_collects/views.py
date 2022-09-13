@@ -2,9 +2,12 @@ from django.shortcuts import get_object_or_404
 from materials.mixins import SerializerByMethodMixin
 from materials.models import Material
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from users.models import User
+from users.permissions import IsOwnerOrAdmin, IsOwnerSchedule
 
 from info_collects.models import InfoCollect
+from info_collects.permissions import IsInfoCollectionOwner
 from info_collects.serializers import (
     InfoCollectMaterialSerializer,
     InfoCollectSerializer,
@@ -18,8 +21,13 @@ def get_object_by_id(model, **kwargs):
 
 
 class UserInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsOwnerSchedule]
+
     queryset = InfoCollect.objects.all()
-    serializer_map = {"GET": ListInfoCollectSerializer, "POST": InfoCollectSerializer}
+    serializer_map = {
+        "GET": ListInfoCollectSerializer,
+        "POST": InfoCollectSerializer,
+    }
 
     lookup_url_kwarg = "id"
 
@@ -40,6 +48,7 @@ class UserInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView
 class UserInfoCollectionDetailsView(
     SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
 ):
+    permission_classes = [IsInfoCollectionOwner]
     queryset = InfoCollect.objects.all()
     serializer_map = {
         "GET": ListInfoCollectSerializer,
@@ -59,6 +68,8 @@ class UserInfoCollectionDetailsView(
 
 
 class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     queryset = InfoCollect.objects.all()
     serializer_map = {
         "GET": ListInfoCollectSerializer,
@@ -83,7 +94,9 @@ class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPI
 class MaterialInfoCollectionDetailsView(
     SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
 ):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrAdmin]
     queryset = InfoCollect.objects.all()
+
     serializer_map = {
         "GET": ListInfoCollectSerializer,
         "PATCH": InfoCollectMaterialSerializer,
