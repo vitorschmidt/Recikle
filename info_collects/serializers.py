@@ -50,7 +50,8 @@ class ListInfosCompanySerializer(serializers.ModelSerializer):
 class InfoCollectMaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = InfoCollect
-        fields = ["id", "cep", "address", "reference_point", "company"]
+        fields = ["id", "cep", "address", "reference_point", "company", "user_id"]
+        read_only_field = ["user_id"]
 
     def create(self, validated_data):
 
