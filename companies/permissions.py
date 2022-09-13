@@ -9,6 +9,9 @@ from .models import Company
 class IsCompanyOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, company: Company):
 
+        if request.user.is_superuser:
+            return True
+
         if request.user.is_company and request.user.id == company.owner_id.id:
             return True
 

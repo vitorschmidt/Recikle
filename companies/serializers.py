@@ -14,7 +14,7 @@ class UniqueValidationError(APIException):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ["id", "name", "collect_days", "donation", "materials"]
+        fields = ["id", "name", "collect_days", "donation", "materials", "owner_id"]
         read_only_fields = ["id", "materials", "owner_id"]
 
     def validate_name(self, value: str):
