@@ -1,11 +1,12 @@
 from django.shortcuts import get_object_or_404, render
 from materials.models import Material
 from rest_framework import generics
-from users.permissions import IsOwnerOrAdmin
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from users.models import User
 
 from schedule_collects.mixins import SerializerByMethodMixin
 from schedule_collects.models import ScheduleCollect
-from schedule_collects.permissions import IsOwnerUserOrAdmin
+from schedule_collects.permissions import IsOnlyOwnerSchedule
 from schedule_collects.serializers import ListScheduleSerializer, ScheduleSerializer
 
 
@@ -15,6 +16,8 @@ def get_object_by_id(model, **kwargs):
 
 
 class ScheduleView(SerializerByMethodMixin, generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     queryset = ScheduleCollect.objects.all()
     serializer_map = {
         "GET": ListScheduleSerializer,
@@ -30,14 +33,16 @@ class ScheduleView(SerializerByMethodMixin, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         material_id = self.kwargs["id"]
+        user_id = self.request.user.id
+        user = get_object_by_id(User, id=user_id)
         material = get_object_or_404(Material, id=material_id)
-        serializer.save(materials=material)
+        serializer.save(user=user, materials=material)
 
 
 class ScheduleDetailsView(
     SerializerByMethodMixin, generics.RetrieveUpdateDestroyAPIView
 ):
-    permission_classes = [IsOwnerUserOrAdmin]
+    permission_classes = [IsOnlyOwnerSchedule]
     queryset = ScheduleCollect.objects.all()
     serializer_map = {
         "GET": ListScheduleSerializer,
