@@ -18,6 +18,8 @@ def get_object_by_id(model, **kwargs):
     object = get_object_or_404(model, **kwargs)
     return object
 
+    # a
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
