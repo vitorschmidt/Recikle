@@ -1,26 +1,23 @@
 import random
-import string
-from uuid import UUID
+from datetime import datetime
 
+from accumulation_points.models import AccumulationPoint
 from companies.models import Company
-from django.db import models
-from django.test import Client, TestCase
+from discards.models import Discard
+from django.test import TestCase
+from django.utils.timezone import make_aware
+from info_collects.models import InfoCollect
 from info_companies.models import InfoCompany
+from materials.models import Material, Recomendation
 from rest_framework import status
+from schedule_collects.models import ScheduleCollect
 from users.models import User
 
-
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
 
 class InfoCompanyViewTestCase(TestCase):
     
     def setUp(self):
-        
+
         self.profiles ={
             "Superuser": {
                 "username": "superuser",
@@ -54,22 +51,70 @@ class InfoCompanyViewTestCase(TestCase):
         self.person = User.objects.create_user(**self.profiles["Person"])
         self.company = User.objects.create_user(**self.profiles["Company"])
 
-        self.company_data = {
-            "name": "Company",
-            "collect_days": 5,
-            "donation": True,
-        }
-        
-        self.company = Company.objects.create(**self.company_data)
+        self.random_usercompany = []
+        self.random_company = []
+        self.random_discard = []
+        self.random_material = []
+        self.random_infocompany = []
+        self.random_infocollect = []
+        self.random_accumulationpoint = []
+        self.random_schedulecollect = []
 
-        self.info_company_data = {
-            "telephone": 12345678,
-            "email": "company@email.com",
-            "address": "Company's Address",
-            "company": self.company
-        }
-        
-        self.info_company = InfoCompany.objects.create(**self.info_company_data)
+        for i in range(1,11):
+            self.random_usercompany.append(User.objects.create_user(**{
+                "username": f"usercompany{i}",
+                "first_name": f"Company {i}",
+                "last_name": "Kenzie",
+                "city": f"Company {i}'s City",
+                "email": f"usercompany{i}@kenzie.com",
+                "is_company": True,
+                "password": f"UserCompany{i}Password123@",
+            }))
+            self.random_company.append(Company.objects.create(**{
+                "name": f"Random Company {i}",
+                "collect_days": i,
+                "donation": (i % 2 == 0),
+                "owner_id": self.random_usercompany[i-1]
+            }))
+            self.random_discard.append(Discard.objects.create(**{
+                "address": f"Random Company {i} Discard's Address",
+                "city": f"Random Company {i} Discard's City",
+                "quantity": i,
+            }))
+            self.random_discard[i-1].companies.sets = self.random_company[i-1]
+            self.random_material.append(Material.objects.create(**{
+                "name": f"Random Company {i} Material",
+                "dangerousness": False,
+                "category": Recomendation.RECICLAVEL,
+                "infos": f"Random Company {i} Material's info",
+                "decomposition": i
+            }))
+            self.random_company[i-1].materials.sets = self.random_material[i-1]
+            self.random_infocompany.append(InfoCompany.objects.create(**{
+                "telephone": 12345678+i,
+                "email": f"randomcompany{i}@email.com",
+                "address": f"Random Company {i} InfoCompany's Address",
+                "company": self.random_company[i-1]
+            }))
+            self.random_infocollect.append(InfoCollect.objects.create(**{
+                "cep": 10000000+i,
+                "address": f"Random Company {i} InfoCollect's Address",
+                "reference_point": f"Random Company {i} InfoCollect's Reference Point",
+                "company": self.random_company[i-1]
+            }))
+            self.random_infocollect[i-1].materials.sets = self.random_material[i-1]
+            self.random_infocollect[i-1].user_id.sets = self.random_usercompany[i-1]
+            self.random_accumulationpoint.append(AccumulationPoint.objects.create(**{
+                "address": f"Random Company {i} Accumulation Point's Address"
+            }))
+            self.random_accumulationpoint[i-1].materials.sets = self.random_material[i-1]
+            self.random_schedulecollect.append(ScheduleCollect.objects.create(**{
+                "days": 3,
+                "scheduling": make_aware(datetime.now()),
+                "city": f"Random Company {i} Schedule Collect's City",
+                "user": self.random_usercompany[i-1]
+            }))
+            self.random_schedulecollect[i-1].materials.sets = self.random_material[i-1]
 
 
     # PATH /api/info_company/
@@ -143,10 +188,43 @@ class InfoCompanyViewTestCase(TestCase):
             msg=f"2) GET {route} error (company credentials); response is not list: {content}")
 
 
-    def superuser_post_infocompany(self):
+    def anonymous_get_infocompany(self):
         
         route = "/api/info_company/"
-        valid_status_code = status.HTTP_201_CREATED
+        valid_status_code = status.HTTP_200_OK
+        
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (anonymous): {content}")
+        self.assertIsInstance(content["results"], list,
+            msg=f"2) GET {route} error (anonymous); response is not list: {content}")
+
+
+    def invalid_get_infocompany(self):
+        
+        route = "/api/info_company/"
+        valid_status_code = status.HTTP_401_UNAUTHORIZED
+        
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer INVALID'
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (invalid token): {content}")
+
+
+    def superuser_post_infocompany(self):
+        
+        random_id = random.randint(0, 9)
+        route = "/api/info_company/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
         
         token = self.client.post(
             '/api/login/',
@@ -158,7 +236,7 @@ class InfoCompanyViewTestCase(TestCase):
             "telephone": 12345678,
             "email": "company@email.com",
             "address": "Company's Address",
-            "company": self.company.id
+            "company": self.random_company[random_id].id
         }
         response = self.client.post(
             route,
@@ -170,30 +248,25 @@ class InfoCompanyViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) POST {route} error (superuser credentials): {content}")
-        for key in ["id", "telephone", "email", "address", "company"]:
-            self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
-        for key in ["telephone", "email", "address", "company"]:
-            self.assertEquals(body[key], content[key], 
-                msg=f"3) POST {route} error (superuser credentials): content doesn't match; {content}")   
 
 
-    def person_post_infocompany(self):
+    def random_usercompany_post_infocompany(self):
         
+        random_id = random.randint(0, 9)
         route = "/api/info_company/"
         valid_status_code = status.HTTP_201_CREATED
         
         token = self.client.post(
             '/api/login/',
-            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
             format='json'
         ).json()['access']
         
         body = {
             "telephone": 12345678,
-            "email": "company@email.com",
-            "address": "Company's Address",
-            "company": self.company.id
+            "email": "newcompanyemail@email.com",
+            "address": "Company's New Address",
+            "company": self.random_company[random_id].id
         }
         response = self.client.post(
             route,
@@ -204,71 +277,122 @@ class InfoCompanyViewTestCase(TestCase):
         )
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) POST {route} error (person credentials): {content}")
+            msg=f"1) POST {route} error (random company): {content}")
         for key in ["id", "telephone", "email", "address", "company"]:
             self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
+                msg=f"2) POST {route} error (random company): Key '{key}' not in response; {content}")   
         for key in ["telephone", "email", "address", "company"]:
             self.assertEquals(body[key], content[key], 
-                msg=f"3) POST {route} error (person credentials): content doesn't match; {content}")   
+                msg=f"3) POST {route} error (random company): content doesn't match; {content}")   
+
+
+    def random_usercompany_post_invalid_body_infocompany(self):
+        
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/"
+        valid_status_code = status.HTTP_400_BAD_REQUEST
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+
+        body = {
+            "telephone": None,
+            "email": None,
+            "address": None,
+            "company": self.random_company[random_id].id
+        }
+     
+        response = self.client.post(
+            route,
+            body,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) PATCH {route} error (random company): {content}")
+
+
+    # def person_post_infocompany(self):
+        
+    #     route = "/api/info_company/"
+    #     valid_status_code = status.HTTP_201_CREATED
+        
+    #     token = self.client.post(
+    #         '/api/login/',
+    #         {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+    #         format='json'
+    #     ).json()['access']
+        
+    #     body = {
+    #         "telephone": 12345678,
+    #         "email": "company@email.com",
+    #         "address": "Company's Address",
+    #         "company": self.company.id
+    #     }
+    #     response = self.client.post(
+    #         route,
+    #         body,
+    #         content_type='application/json',
+    #         HTTP_ACCEPT='application/json',
+    #         HTTP_AUTHORIZATION='Bearer ' + token
+    #     )
+    #     content = response.json()
+    #     self.assertEquals(response.status_code, valid_status_code,
+    #         msg=f"1) POST {route} error (person credentials): {content}")
+    #     for key in ["id", "telephone", "email", "address", "company"]:
+    #         self.assertTrue(key in content, 
+    #             msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
+    #     for key in ["telephone", "email", "address", "company"]:
+    #         self.assertEquals(body[key], content[key], 
+    #             msg=f"3) POST {route} error (person credentials): content doesn't match; {content}")   
    
 
-    def company_post_infocompany(self):
+    # def company_post_infocompany(self):
         
-        route = "/api/info_company/"
-        valid_status_code = status.HTTP_201_CREATED
+    #     route = "/api/info_company/"
+    #     valid_status_code = status.HTTP_201_CREATED
         
-        token = self.client.post(
-            '/api/login/',
-            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
-            format='json'
-        ).json()['access']
+    #     token = self.client.post(
+    #         '/api/login/',
+    #         {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+    #         format='json'
+    #     ).json()['access']
         
-        body = {
-            "telephone": 12345678,
-            "email": "company@email.com",
-            "address": "Company's Address",
-            "company": self.company.id
-        }
-        response = self.client.post(
-            route,
-            body,
-            content_type='application/json',
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) POST {route} error (company credentials): {content}")
-        for key in ["id", "telephone", "email", "address", "company"]:
-            self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
-        for key in ["telephone", "email", "address", "company"]:
-            self.assertEquals(body[key], content[key], 
-                msg=f"3) POST {route} error (company credentials): content doesn't match; {content}")   
+    #     body = {
+    #         "telephone": 12345678,
+    #         "email": "company@email.com",
+    #         "address": "Company's Address",
+    #         "company": self.company.id
+    #     }
+    #     response = self.client.post(
+    #         route,
+    #         body,
+    #         content_type='application/json',
+    #         HTTP_ACCEPT='application/json',
+    #         HTTP_AUTHORIZATION='Bearer ' + token
+    #     )
+    #     content = response.json()
+    #     self.assertEquals(response.status_code, valid_status_code,
+    #         msg=f"1) POST {route} error (company credentials): {content}")
+    #     for key in ["id", "telephone", "email", "address", "company"]:
+    #         self.assertTrue(key in content, 
+    #             msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
+    #     for key in ["telephone", "email", "address", "company"]:
+    #         self.assertEquals(body[key], content[key], 
+    #             msg=f"3) POST {route} error (company credentials): content doesn't match; {content}")   
    
    
     # PATH info_company/<int:id>/
 
     def superuser_get_infocompany_id(self):
-        company = []
-        infocompany = []
-        for i in range(1,11):
-            company.append(Company.objects.create(
-            **{"name": f"Random Company {i}",
-               "collect_days": i,
-               "donation": (i % 2 == 0),
-            }))
-            infocompany.append(InfoCompany.objects.create(
-            **{
-                "telephone": 12345678,
-                "email": f"company{i}@email.com",
-                "address": f"Company{i}'s Address",
-                "company": company[i-1]
-            }))
         
         valid_status_code = status.HTTP_200_OK
-        route = f"/api/info_company/{infocompany[random.randint(0, 9)].id}/" 
+        route = f"/api/info_company/{self.random_infocompany[random.randint(0, 9)].id}/" 
         
         token = self.client.post(
             '/api/login/',
@@ -286,31 +410,56 @@ class InfoCompanyViewTestCase(TestCase):
             msg=f"1) GET {route} error (superuser credentials): {content}")
         for key in ["id", "telephone", "email", "address", "company"]:
             self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
+                msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
+
+
+    def person_get_infocompany_id(self):
+        
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/info_company/{self.random_infocompany[random.randint(0, 9)].id}/" 
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+            format='json'
+        ).json()['access']
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+        for key in ["id", "telephone", "email", "address", "company"]:
+            self.assertTrue(key in content, 
+                msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
+
+
+    def anonymous_get_infocompany_id(self):
+        
+        valid_status_code = status.HTTP_200_OK
+        route = f"/api/info_company/{self.random_infocompany[random.randint(0, 9)].id}/" 
+
+        response = self.client.get(
+            route,
+            HTTP_ACCEPT='application/json',
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) GET {route} error (person credentials): {content}")
+        for key in ["id", "telephone", "email", "address", "company"]:
+            self.assertTrue(key in content, 
+                msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
 
 
     def superuser_patch_infocompany_id(self):
         
-        company = []
-        infocompany = []
-        for i in range(1,11):
-            company.append(Company.objects.create(
-            **{"name": f"Random Company {i}",
-               "collect_days": i,
-               "donation": (i % 2 == 0),
-            }))
-            infocompany.append(InfoCompany.objects.create(
-            **{
-                "telephone": 12345678,
-                "email": f"company{i}@email.com",
-                "address": f"Company{i}'s Address",
-                "company": company[i-1]
-            }))
-            
-        selection = random.randint(0, 9)    
-        valid_status_code = status.HTTP_200_OK
-        route = f"/api/info_company/{infocompany[selection].id}/" 
-                
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/{self.random_infocompany[random_id].id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+        
         token = self.client.post(
             '/api/login/',
             {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
@@ -321,6 +470,7 @@ class InfoCompanyViewTestCase(TestCase):
             "telephone": 12345678+random.randint(0, 9),
             "email": f"company{random.randint(100, 200)}@email.com",
             "address": f"{random.randint(500, 800)} Street",
+            "company": self.random_company[random_id].id
         }
         response = self.client.patch(
             route,
@@ -332,46 +482,25 @@ class InfoCompanyViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) PATCH {route} error (superuser credentials): {content}")
-        for key in ["id", "telephone", "email", "address", "company"]:
-            self.assertTrue(key in content, 
-                msg=f"2) PATCH {route} error (superuser credentials): Key '{key}' not in response; {content}")   
-        for key in ["telephone", "email", "address"]:
-            self.assertEquals(body[key], content[key], 
-                msg=f"3) PATCH {route} error (superuser credentials): content doesn't match; {content}")   
-                
 
-    def superuser_patch_invalid_body_infocompany_id(self):
+
+    def random_usercompany_patch_infocompany_id(self):
         
-        company = []
-        infocompany = []
-        for i in range(1,11):
-            company.append(Company.objects.create(
-            **{"name": f"Random Company {i}",
-               "collect_days": i,
-               "donation": (i % 2 == 0),
-            }))
-            infocompany.append(InfoCompany.objects.create(
-            **{
-                "telephone": 12345678,
-                "email": f"company{i}@email.com",
-                "address": f"Company{i}'s Address",
-                "company": company[i-1]
-            }))
-            
-        selection = random.randint(0, 9)    
-        valid_status_code = status.HTTP_400_BAD_REQUEST
-        route = f"/api/info_company/{infocompany[selection].id}/" 
-                
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/{self.random_infocompany[random_id].id}/"
+        valid_status_code = status.HTTP_200_OK
+        
         token = self.client.post(
             '/api/login/',
-            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
             format='json'
         ).json()['access']
         
         body = {
             "telephone": 12345678+random.randint(0, 9),
             "email": f"company{random.randint(100, 200)}@email.com",
-            "address": ''.join(random.choices(string.ascii_uppercase +string.digits, k=500)),
+            "address": f"{random.randint(500, 800)} Street",
+            "company": self.random_company[random_id].id
         }
         response = self.client.patch(
             route,
@@ -382,8 +511,90 @@ class InfoCompanyViewTestCase(TestCase):
         )
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) PATCH {route} invalid body error (superuser credentials): {content}")
+            msg=f"1) PATCH {route} error (random company): {content}")
+        for key in ["id", "telephone", "email", "address", "company"]:
+            self.assertTrue(key in content, 
+                msg=f"2) PATCH {route} error (random company): Key '{key}' not in response; {content}")   
+        for key in ["telephone", "email", "address"]:
+            self.assertEquals(body[key], content[key], 
+                msg=f"3) PATCH {route} error (random company): content doesn't match; {content}")   
+
+
+    def random_usercompany_delete_infocompany_id(self):
+        
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/{self.random_infocompany[random_id].id}/"
+        valid_status_code = status.HTTP_204_NO_CONTENT
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+        
+        response = self.client.delete(
+            route,
+            {"company": self.random_company[random_id].id},
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) DELETE {route} error (superuser credentials): {response.status_code}")
+
+
+    def superuser_delete_infocompany_id(self):
+        
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/{self.random_infocompany[random_id].id}/"
+        valid_status_code = status.HTTP_403_FORBIDDEN
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
+            format='json'
+        ).json()['access']
+        
+        response = self.client.delete(
+            route,
+            {"company": self.random_company[random_id].id},
+            content_type='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) DELETE {route} error (superuser credentials): {response.status_code}")
                 
+
+    def random_usercompany_patch_invalid_body_infocompany_id(self):
+        
+        random_id = random.randint(0, 9)
+        route = f"/api/info_company/{self.random_infocompany[random_id].id}/"
+        valid_status_code = status.HTTP_400_BAD_REQUEST
+        
+        token = self.client.post(
+            '/api/login/',
+            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
+            format='json'
+        ).json()['access']
+
+        body = {
+            "telephone": None,
+            "email": None,
+            "address": None,
+            "company": self.random_company[random_id].id
+        }
+     
+        response = self.client.patch(
+            route,
+            body,
+            content_type='application/json',
+            HTTP_ACCEPT='application/json',
+            HTTP_AUTHORIZATION='Bearer ' + token
+        )
+        content = response.json()
+        self.assertEquals(response.status_code, valid_status_code,
+            msg=f"1) PATCH {route} error (random company): {content}")
+
 
 
 

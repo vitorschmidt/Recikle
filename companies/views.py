@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from users.models import User
 
 from companies.models import Company
-from companies.permissions import IsCompanyOrAdmin, IsCompanyOwnerOrAdmin
+from companies.permissions import IsCompanyOrAdmin, IsCompanyOwnerDetails
 from companies.serializers import CompanySerializer, ListInfoCollectionCompanySerializer
 
 
@@ -26,7 +26,7 @@ class CompanyView(generics.ListCreateAPIView):
 
 
 class CompanyDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsCompanyOwnerOrAdmin]
+    permission_classes = [IsAuthenticated, IsCompanyOwnerDetails]
 
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
