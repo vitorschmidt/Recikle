@@ -178,10 +178,6 @@ class TestA2(UserViewTestCase):
         """USER VIEW: GET /api/users/<id>/info_collection/<info_id>/ (superuser > random user's)"""
         self.superuser_get_user_infocollection_id()
 
-    def test_A236(self):
-        """USER VIEW: GET /api/users/<id>/info_collection/<info_id>/ (random user's own)"""
-        self.randomuser_get_own_infocollection_id()
-
 
 class TestB1(CompanyModelTestCase):
     
@@ -316,44 +312,22 @@ class TestB2(CompanyViewTestCase):
         self.superuser_get_company_discard_id()
 
     def test_B229(self):
-        """COMPANY VIEW: GET /api/companies/<int:id>/discards/<int:discard_id>/ (random company)"""
-        self.random_usercompany_get_company_discard_id()
-
-    def test_B230(self):
         """COMPANY VIEW: PATCH /api/companies/<int:id>/discards/<int:discard_id>/ (superuser credentials)"""
         self.superuser_patch_company_discard_id()
 
     # PATH /api/companies/<int:id>/materials/ 
 
-    def test_B231(self):
+    def test_B230(self):
         """COMPANY VIEW: GET /api/companies/<int:id>/materials/ (superuser credentials)"""
         self.superuser_get_company_materials()
 
-    def test_B232(self):
-        """COMPANY VIEW: POST /api/companies/<int:id>/materials/ (superuser credentials)"""
-        self.superuser_post_company_material()
-
-    # PATH /api/companies/<int:id>/materials/<int:material_id>/
-
-    def test_B233(self):
-        """COMPANY VIEW: GET /api/companies/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
-        self.superuser_get_company_material_id()
-
-    def test_B234(self):
-        """COMPANY VIEW: GET /api/companies/<int:id>/materials/<int:material_id>/ (random company)"""
-        self.random_usercompany_get_company_material_id()
-
-    def test_B235(self):
-        """COMPANY VIEW: PATCH /api/companies/<int:id>/materials/<int:material_id>/ (superuser credentials)"""
-        self.superuser_patch_company_material_id()
-
     # PATH /api/companies/<int:id>/info_collection/
 
-    def test_B236(self):
+    def test_B231(self):
         """COMPANY VIEW: GET /api/companies/<int:id>/info_collection/ (superuser credentials)"""
         self.superuser_get_company_infocollection()
 
-    def test_B237(self):
+    def test_B232(self):
         """COMPANY VIEW: GET /api/companies/<int:id>/info_company/ (superuser credentials)"""
         self.superuser_get_company_infocompany()
 
@@ -506,16 +480,6 @@ class TestD2(MaterialViewTestCase):
     def test_D211(self):
         """MATERIAL VIEW: POST /api/materials/<int:id>/info_collection/ (superuser credentials)"""
         self.superuser_post_material_infocollection()
-
-    # PATH /api/materials/<int:id>/info_collection/<int:info_id>/
-
-    def test_D212(self):
-        """MATERIAL VIEW: GET /api/materials/<int:id>/info_collection/<int:info_id>/ (superuser credentials)"""
-        self.superuser_get_material_infocollection_id()
-
-    def test_D213(self):
-        """MATERIAL VIEW: PATCH /api/materials/<int:id>/info_collection/<int:info_id>/ (superuser credentials)"""
-        self.superuser_patch_material_infocollection_id()
 
 
 class TestE1(AccumulationPointModelTestCase):

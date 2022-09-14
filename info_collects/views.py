@@ -71,6 +71,7 @@ class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPI
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = InfoCollect.objects.all()
+
     serializer_map = {
         "GET": ListInfoCollectSerializer,
         "POST": InfoCollectMaterialSerializer,
@@ -83,10 +84,11 @@ class MaterialInfoCollectionView(SerializerByMethodMixin, generics.ListCreateAPI
         info_collect = InfoCollect.objects.filter(materials=material)
 
         return info_collect
-
+       
     def perform_create(self, serializer):
-        user_id = self.request.user.id
+       
         material_id = self.kwargs["id"]
+        user_id = self.request.user.id
         material = get_object_by_id(Material, id=material_id)
 
         serializer.save(materials=material, user_id=user_id)

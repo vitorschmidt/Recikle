@@ -870,7 +870,7 @@ class UserViewTestCase(TestCase):
     def superuser_get_user_schedules(self):
 
         route = f"/api/users/{self.random_usercompany[random.randint(0, 9)].id}/schedules/"
-        valid_status_code = status.HTTP_200_OK
+        valid_status_code = status.HTTP_403_FORBIDDEN
 
         token = self.client.post(
             '/api/login/',
@@ -886,8 +886,6 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        # self.assertIsInstance(content["results"], list,
-        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
     def randomuser_get_own_schedules(self):
@@ -950,7 +948,7 @@ class UserViewTestCase(TestCase):
     def superuser_get_user_infocollection(self):
 
         route = f"/api/users/{self.random_usercompany[random.randint(0, 9)].id}/info_collection/"
-        valid_status_code = status.HTTP_200_OK
+        valid_status_code = status.HTTP_403_FORBIDDEN
 
         token = self.client.post(
             '/api/login/',
@@ -966,8 +964,6 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        # self.assertIsInstance(content["results"], list,
-        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
     def randomuser_get_own_infocollection(self):
@@ -1031,7 +1027,7 @@ class UserViewTestCase(TestCase):
 
         random_id = random.randint(0, 9)
         route = f"/api/users/{self.random_usercompany[random_id].id}/info_collection/{self.random_infocollect[random_id].id}/"
-        valid_status_code = status.HTTP_200_OK
+        valid_status_code = status.HTTP_403_FORBIDDEN
 
         token = self.client.post(
             '/api/login/',
@@ -1047,29 +1043,4 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        # self.assertIsInstance(content["results"], list,
-        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
-
-    def randomuser_get_own_infocollection_id(self):
-
-        random_id = random.randint(0, 9)
-        route = f"/api/users/{self.random_usercompany[random_id].id}/info_collection/{self.random_infocollect[random_id].id}/"
-        valid_status_code = status.HTTP_200_OK
-
-        token = self.client.post(
-            '/api/login/',
-            {'username': f"usercompany{random_id+1}", 'password': f"UserCompany{random_id+1}Password123@"},
-            format='json'
-        ).json()['access']
-
-        response = self.client.get(
-            route,
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) GET {route} error (random user): {content}")
-        # self.assertIsInstance(content["results"], list,
-        #     msg=f"2) GET {route} error (random user); response is not list: {content}")

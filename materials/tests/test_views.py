@@ -4,7 +4,6 @@ from datetime import datetime
 from accumulation_points.models import AccumulationPoint
 from companies.models import Company
 from discards.models import Discard
-# from django.db import models
 from django.test import TestCase
 from django.utils.timezone import make_aware
 from info_collects.models import InfoCollect
@@ -14,15 +13,6 @@ from rest_framework import status
 from schedule_collects.models import ScheduleCollect
 from users.models import User
 
-# from uuid import UUID
-
-
-# def is_valid_uuid(uuid_to_test, version=4):
-#     try:
-#         uuid_obj = UUID(uuid_to_test, version=version)
-#     except ValueError:
-#         return False
-#     return str(uuid_obj) == uuid_to_test
 
 class MaterialViewTestCase(TestCase):
     
@@ -506,70 +496,6 @@ class MaterialViewTestCase(TestCase):
             self.assertTrue(key in content, 
                 msg=f"2) POST {route} error (superuser credentials): Key '{key}' not in response; {content}")   
                 
-
-# PATH /api/materials/<int:id>/info_collection/<int:info_id>/
-
-    def superuser_get_material_infocollection_id(self):
-
-        random_id = random.randint(0, 9)
-        route = f"/api/materials/{self.random_material[random_id].id}/info_collection/{self.random_infocollect[random_id].id}/"
-
-        valid_status_code = status.HTTP_200_OK
-
-        token = self.client.post(
-            '/api/login/',
-            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
-            format='json'
-        ).json()['access']
-
-        response = self.client.get(
-            route,
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) GET {route} error (superuser credentials): {content}")
-        # for key in ["id", "address"]:
-        #     self.assertTrue(key in content, 
-        #         msg=f"2) GET {route} error (superuser credentials): Key '{key}' not in response; {content}")   
-
-
-    def superuser_patch_material_infocollection_id(self):
-
-        random_id = random.randint(0, 9)
-        route = f"/api/materials/{self.random_material[random_id].id}/info_collection/{self.random_infocollect[random_id].id}/"
-
-        valid_status_code = status.HTTP_200_OK
-
-        token = self.client.post(
-            '/api/login/',
-            {'username': self.profiles["Superuser"]["username"], 'password': self.profiles["Superuser"]["password"]},
-            format='json'
-        ).json()['access']
-
-        body = {
-            "cep": 88888888,
-            "address": f"PATCH Random InfoCollect's Address",
-            "reference_point": f"PATCH Random InfoCollect's Reference Point",
-        }
-        response = self.client.patch(
-            route,
-            body,
-            content_type='application/json',
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) PATCH {route} error (superuser credentials): {content}")
-        for key in ["id", "address"]:
-            self.assertTrue(key in content, 
-                msg=f"2) PATCH {route} error (superuser credentials): Key '{key}' not in response; {content}")   
-        for key in ["cep", "address", "reference_point"]:
-            self.assertEquals(self.random_infocollect[random_id].key, content[key], 
-                msg=f"3) PATCH {route} error (superuser credentials): '{key}' field doesn't match; {content}")   
-
 
 
 
