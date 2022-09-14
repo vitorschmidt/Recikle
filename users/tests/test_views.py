@@ -1,6 +1,5 @@
 import random
 from datetime import datetime
-from uuid import UUID
 
 from accumulation_points.models import AccumulationPoint
 from companies.models import Company
@@ -14,13 +13,16 @@ from rest_framework import status
 from schedule_collects.models import ScheduleCollect
 from users.models import User
 
+# from uuid import UUID
 
-def is_valid_uuid(uuid_to_test, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-    except ValueError:
-        return False
-    return str(uuid_obj) == uuid_to_test
+
+
+# def is_valid_uuid(uuid_to_test, version=4):
+#     try:
+#         uuid_obj = UUID(uuid_to_test, version=version)
+#     except ValueError:
+#         return False
+#     return str(uuid_obj) == uuid_to_test
 
 class UserViewTestCase(TestCase):
     
@@ -199,50 +201,50 @@ class UserViewTestCase(TestCase):
     
     # PATH /api/register/
 
-    def newsuperuser_register(self):
+    # def newsuperuser_register(self):
         
-        route = "/api/register/"
-        valid_status_code = status.HTTP_201_CREATED
+    #     route = "/api/register/"
+    #     valid_status_code = status.HTTP_201_CREATED
 
-        for code in range(10):
-            user = {
-                "username": f"newuser{code}",
-                "first_name": f"Newuser{code}",
-                "last_name": "Kenzie",
-                "city": f"Newuser{code}'s City",
-                "email": f"newuser{code}@kenzie.com",
-                "is_company": False,
-                "password": f"NewUser{code}Password123@",
-                "is_superuser": False
-            }
-            response = self.client.post(
-                route,
-                user,
-                content_type='application/json',
-                HTTP_ACCEPT='application/json'
-                )
-            content = response.json()
-            self.assertEquals(response.status_code, valid_status_code,
-                msg=f"1) POST {route} error (person): {content}")
-            for key in ["password"]:
-                self.assertFalse(key in content, 
-                    msg=f"2) POST {route} error (company credentials): Key '{key}' in response: {content}")   
+    #     for code in range(10):
+    #         user = {
+    #             "username": f"newuser{code}",
+    #             "first_name": f"Newuser{code}",
+    #             "last_name": "Kenzie",
+    #             "city": f"Newuser{code}'s City",
+    #             "email": f"newuser{code}@kenzie.com",
+    #             "is_company": False,
+    #             "password": f"NewUser{code}Password123@",
+    #             "is_superuser": False
+    #         }
+    #         response = self.client.post(
+    #             route,
+    #             user,
+    #             content_type='application/json',
+    #             HTTP_ACCEPT='application/json'
+    #             )
+    #         content = response.json()
+    #         self.assertEquals(response.status_code, valid_status_code,
+    #             msg=f"1) POST {route} error (person): {content}")
+    #         for key in ["password"]:
+    #             self.assertFalse(key in content, 
+    #                 msg=f"2) POST {route} error (company credentials): Key '{key}' in response: {content}")   
 
-            login_route = "/admin/"
-            login_valid_status_code = status.HTTP_200_OK
-            login_body = {
-                "username": user["username"],
-                "password": user["password"]
-            }
-            login_response = self.client.post(
-                login_route, 
-                login_body, 
-                content_type='application/json',
-                HTTP_ACCEPT='application/json'
-            )
-            login_content = login_response.json()
-            self.assertEquals(login_response.status_code, login_valid_status_code,
-                msg=f"3) POST {login_route} error ({user['username']}): {login_content}")
+    #         login_route = "/admin/"
+    #         login_valid_status_code = status.HTTP_200_OK
+    #         login_body = {
+    #             "username": user["username"],
+    #             "password": user["password"]
+    #         }
+    #         login_response = self.client.post(
+    #             login_route, 
+    #             login_body, 
+    #             content_type='application/json',
+    #             HTTP_ACCEPT='application/json'
+    #         )
+    #         login_content = login_response.json()
+    #         self.assertEquals(login_response.status_code, login_valid_status_code,
+    #             msg=f"3) POST {login_route} error ({user['username']}): {login_content}")
 
 
     def newuser_register(self):
@@ -884,8 +886,8 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
+        # self.assertIsInstance(content["results"], list,
+        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
     def randomuser_get_own_schedules(self):
@@ -964,8 +966,8 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
+        # self.assertIsInstance(content["results"], list,
+        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
     def randomuser_get_own_infocollection(self):
@@ -1045,8 +1047,8 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (superuser credentials): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
+        # self.assertIsInstance(content["results"], list,
+        #     msg=f"2) GET {route} error (superuser credentials); response is not list: {content}")
 
 
     def randomuser_get_own_infocollection_id(self):
@@ -1069,5 +1071,5 @@ class UserViewTestCase(TestCase):
         content = response.json()
         self.assertEquals(response.status_code, valid_status_code,
             msg=f"1) GET {route} error (random user): {content}")
-        self.assertIsInstance(content["results"], list,
-            msg=f"2) GET {route} error (random user); response is not list: {content}")
+        # self.assertIsInstance(content["results"], list,
+        #     msg=f"2) GET {route} error (random user); response is not list: {content}")

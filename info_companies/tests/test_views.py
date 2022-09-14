@@ -317,74 +317,74 @@ class InfoCompanyViewTestCase(TestCase):
             msg=f"1) PATCH {route} error (random company): {content}")
 
 
-    def person_post_infocompany(self):
+    # def person_post_infocompany(self):
         
-        route = "/api/info_company/"
-        valid_status_code = status.HTTP_201_CREATED
+    #     route = "/api/info_company/"
+    #     valid_status_code = status.HTTP_201_CREATED
         
-        token = self.client.post(
-            '/api/login/',
-            {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
-            format='json'
-        ).json()['access']
+    #     token = self.client.post(
+    #         '/api/login/',
+    #         {'username': self.profiles["Person"]["username"], 'password': self.profiles["Person"]["password"]},
+    #         format='json'
+    #     ).json()['access']
         
-        body = {
-            "telephone": 12345678,
-            "email": "company@email.com",
-            "address": "Company's Address",
-            "company": self.company.id
-        }
-        response = self.client.post(
-            route,
-            body,
-            content_type='application/json',
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) POST {route} error (person credentials): {content}")
-        for key in ["id", "telephone", "email", "address", "company"]:
-            self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
-        for key in ["telephone", "email", "address", "company"]:
-            self.assertEquals(body[key], content[key], 
-                msg=f"3) POST {route} error (person credentials): content doesn't match; {content}")   
+    #     body = {
+    #         "telephone": 12345678,
+    #         "email": "company@email.com",
+    #         "address": "Company's Address",
+    #         "company": self.company.id
+    #     }
+    #     response = self.client.post(
+    #         route,
+    #         body,
+    #         content_type='application/json',
+    #         HTTP_ACCEPT='application/json',
+    #         HTTP_AUTHORIZATION='Bearer ' + token
+    #     )
+    #     content = response.json()
+    #     self.assertEquals(response.status_code, valid_status_code,
+    #         msg=f"1) POST {route} error (person credentials): {content}")
+    #     for key in ["id", "telephone", "email", "address", "company"]:
+    #         self.assertTrue(key in content, 
+    #             msg=f"2) POST {route} error (person credentials): Key '{key}' not in response; {content}")   
+    #     for key in ["telephone", "email", "address", "company"]:
+    #         self.assertEquals(body[key], content[key], 
+    #             msg=f"3) POST {route} error (person credentials): content doesn't match; {content}")   
    
 
-    def company_post_infocompany(self):
+    # def company_post_infocompany(self):
         
-        route = "/api/info_company/"
-        valid_status_code = status.HTTP_201_CREATED
+    #     route = "/api/info_company/"
+    #     valid_status_code = status.HTTP_201_CREATED
         
-        token = self.client.post(
-            '/api/login/',
-            {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
-            format='json'
-        ).json()['access']
+    #     token = self.client.post(
+    #         '/api/login/',
+    #         {'username': self.profiles["Company"]["username"], 'password': self.profiles["Company"]["password"]},
+    #         format='json'
+    #     ).json()['access']
         
-        body = {
-            "telephone": 12345678,
-            "email": "company@email.com",
-            "address": "Company's Address",
-            "company": self.company.id
-        }
-        response = self.client.post(
-            route,
-            body,
-            content_type='application/json',
-            HTTP_ACCEPT='application/json',
-            HTTP_AUTHORIZATION='Bearer ' + token
-        )
-        content = response.json()
-        self.assertEquals(response.status_code, valid_status_code,
-            msg=f"1) POST {route} error (company credentials): {content}")
-        for key in ["id", "telephone", "email", "address", "company"]:
-            self.assertTrue(key in content, 
-                msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
-        for key in ["telephone", "email", "address", "company"]:
-            self.assertEquals(body[key], content[key], 
-                msg=f"3) POST {route} error (company credentials): content doesn't match; {content}")   
+    #     body = {
+    #         "telephone": 12345678,
+    #         "email": "company@email.com",
+    #         "address": "Company's Address",
+    #         "company": self.company.id
+    #     }
+    #     response = self.client.post(
+    #         route,
+    #         body,
+    #         content_type='application/json',
+    #         HTTP_ACCEPT='application/json',
+    #         HTTP_AUTHORIZATION='Bearer ' + token
+    #     )
+    #     content = response.json()
+    #     self.assertEquals(response.status_code, valid_status_code,
+    #         msg=f"1) POST {route} error (company credentials): {content}")
+    #     for key in ["id", "telephone", "email", "address", "company"]:
+    #         self.assertTrue(key in content, 
+    #             msg=f"2) POST {route} error (company credentials): Key '{key}' not in response; {content}")   
+    #     for key in ["telephone", "email", "address", "company"]:
+    #         self.assertEquals(body[key], content[key], 
+    #             msg=f"3) POST {route} error (company credentials): content doesn't match; {content}")   
    
    
     # PATH info_company/<int:id>/
